@@ -1,18 +1,19 @@
 //! All Reducers here
-import { combineReducers } from 'redux'
+import { combineReducers } from "redux"
 
 export default combineReducers({
-  user: user
- })
- 
-function user(state={}, action){
+  user: user,
+  allUsers: allUsers
+})
+
+function user(state = {}, action) {
   switch (action.type) {
-    case 'LOGIN_USER':
+    case "LOGIN_USER":
       return {
-        ...action.user, 
+        ...action.user,
         isLoggedIn: true
       }
-    case 'LOGOUT_USER':
+    case "LOGOUT_USER":
       return {
         user: {},
         isLoggedIn: false
@@ -22,3 +23,11 @@ function user(state={}, action){
   }
 }
 
+function allUsers(state = [], action) {
+  switch (action.type) {
+    case "SET_ALL_USERS":
+      return { ...action.allUsers }
+    default:
+      return state
+  }
+}

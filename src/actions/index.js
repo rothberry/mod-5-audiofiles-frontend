@@ -1,4 +1,6 @@
 // ! All actions go in here
+const fetchUsersUrl = "http://localhost:3000/users"
+const fetchSongsUrl = "http://localhost:3000/songs"
 
 export function loginUser(user) {
   console.log("login")
@@ -43,8 +45,8 @@ export function currentUser(history) {
     const reqObj = {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
+        // "Content-Type": "application/json",
+        // "Accept": "application/json",
         "Authorization": `Bearer ${token}`
       }
     }
@@ -70,9 +72,7 @@ export function registerUser(formData, history) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData)
     }
-    const fetchNewUserUrl = "http://localhost:3000/users"
-    // debugger
-    return fetch(fetchNewUserUrl, reqObj)
+    return fetch(fetchUsersUrl, reqObj)
       .then(resp => resp.json())
       .then(data => {
         if (data.error) {
@@ -88,6 +88,26 @@ export function registerUser(formData, history) {
   }
 }
 
+export function setAllUsers(allUsers) {
+  return {
+    type: "SET_ALL_USERS",
+    allUsers
+  }
+}
+
 export function fetchAllUsers() {
   // TODO To fetch all the users from the database
+  return dispatch => {
+    return fetch(fetchUsersUrl)
+      .then(resp => resp.json())
+      .then(data => {
+        // console.log(data)
+        if (data.error) {
+          console.log(data.error)
+        } else {
+          dispatch(setAllUsers(data))
+        }
+      })
+      .catch(err => console.log(err))
+  }
 }

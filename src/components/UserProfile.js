@@ -8,9 +8,17 @@ class UserProfile extends Component {
   render() {
     console.log(this.props)
     const { username, name, location, bio, img_url } = this.props.user
-    const isCurrentUser = this.props.user.length > 0
-    console.log(isCurrentUser)
-    return isCurrentUser ? (
+    const userTest = { 
+      username: 'rotho', 
+      name: 'Phil', 
+      location: 'Kzoo', 
+      bio: 'jgashgfajsfgaskfgashkfga', 
+      img_url: 'https://djmag.com/sites/default/files/styles/djmag_landscape__691x372_/public/article/image/pioneer-dj-set-static-shot_v1mcbvae__F0000.jpg?itok=HXtNPeyG' 
+    }
+    // const { username, name, location, bio, img_url } = userTest
+    // const isCurrentUser = this.props.user.length > 0
+    // console.log(isCurrentUser)
+    return true ? (
       <div className="user-profile">
         Profile Page
         <h1>{username}</h1>

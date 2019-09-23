@@ -8,12 +8,21 @@ import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router } from 'react-router-dom'
 import reducer from './reducers/index'
-// import 'semantic-ui-css/semantic.min.css'
+import { loadState, saveState } from './localStorage'
+import throttle from 'lodash/throttle'
+
+const persistedState = loadState()
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(reducer, composeEnhancers(
+const store = createStore(reducer, persistedState, composeEnhancers(
   applyMiddleware(thunk)
 ));
+
+store.subscribe(throttle(()=>{
+  saveState({
+    allUsers: store.getState().allUsers
+  })
+}, 1000))
 
 ReactDOM.render(
 <Provider store={store}>
