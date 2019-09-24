@@ -1,27 +1,57 @@
 /*eslint-disable */
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { Link } from "react-router-dom"
-// import { user } from "../reducers"
+import { Link, withRouter } from "react-router-dom"
+import { Button } from "semantic-ui-react"
+// import {fetchFollowing} from '../actions'
 
 class UserProfile extends Component {
-  render() {
-    console.log(this.props)
-    const { username, name, location, bio, img_url } = this.props.user
-    const userTest = { 
-      username: 'rotho', 
-      name: 'Phil', 
-      location: 'Kzoo', 
-      bio: 'jgashgfajsfgaskfgashkfga', 
-      img_url: 'https://djmag.com/sites/default/files/styles/djmag_landscape__691x372_/public/article/image/pioneer-dj-set-static-shot_v1mcbvae__F0000.jpg?itok=HXtNPeyG' 
+  findUser = displayUserID => {
+    if (this.props.allUsers.length > 0) {
+      return this.props.allUsers.find(u => {
+        return u.id === displayUserID
+      })
     }
-    // const { username, name, location, bio, img_url } = userTest
-    // const isCurrentUser = this.props.user.length > 0
-    // console.log(isCurrentUser)
-    return true ? (
-      <div className="user-profile">
+  }
+
+  // componentDidMount() {
+  //   this.props.fetchFollowing()
+  // }
+
+  handleFollowUser = (followed_id, follower_id) => {
+    console.log("followed: ", followed_id)
+    console.log("follower: ", follower_id)
+    // TODO Sends fetch to Followings Model with
+  }
+
+  render() {
+    const displayUserID = Number(this.props.history.location.pathname.slice(9))
+    // const { username, name, location, bio, id } = this.props.user
+    // const { allUsers } = this.props
+    // this.props.fetchFollowing(this.props.user.id)
+    const displayUser = this.findUser(displayUserID)
+    const { username, name, location, bio, id } = displayUser
+    const isCurrentUser = id === this.props.user.id
+    const isFollowing = this.props.user.id === this.props.followeds.find(f => f.id === id )
+    console.log('current user? ', isCurrentUser)
+    console.log('following? ', isFollowing)
+    return displayUser ? (
+      <div className={`user-profile-${id}`}>
         Profile Page
-        <h1>{username}</h1>
+        <h1>Username: {username}</h1>
+        <h1>Name: {name}</h1>
+        <h1>location: {location}</h1>
+        <p>Bio: {bio}</p>
+        {
+          isCurrentUser ? null : (
+          <Button
+            onClick={(followed_id, follower_id) =>
+              this.handleFollowUser(displayUserID, this.props.user.id)
+            }
+          >
+            Follow Me!
+          </Button>
+        )}
         <Link onClick={this.props.handleLogout}>Logout</Link>
       </div>
     ) : (
@@ -35,10 +65,14 @@ class UserProfile extends Component {
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    user: state.user,
+    allUsers: state.allUsers,
+    followeds: state.followeds,
+    followers: state.followers
   }
 }
 export default connect(
   mapStateToProps,
   null
-)(UserProfile)
+  // {fetchFollowing}
+)(withRouter(UserProfile))

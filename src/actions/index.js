@@ -32,36 +32,47 @@ export function loginCurrentUser(formData, history) {
         } else {
           localStorage.token = data.jwt
           dispatch(loginUser(data.user))
-          history.push("/profile")
+          console.log(data)
+          history.push(`/profile/${data.user.id}`)
         }
       })
       .catch(err => console.log(err))
   }
 }
 
-export function currentUser(history) {
+export function currentUser() {
   return dispatch => {
     const token = localStorage.token
     const reqObj = {
       method: "GET",
       headers: {
-        // "Content-Type": "application/json",
-        // "Accept": "application/json",
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     }
     return fetch("http://localhost:3000/api/v1/current_user", reqObj)
       .then(res => res.json())
       .then(data => {
         if (data.error) {
-          // Handle Error
-          console.log('currentUser error: ', data)
+          console.log("currentUser error: ", data)
         } else {
           dispatch(loginUser(data.user))
-          history.push("/profile")
         }
       })
       .catch(err => console.log(err))
+  }
+}
+
+export function setAllFolloweds(followeds) {
+  return {
+    type: "SET_ALL_FOLLOWEDS",
+    followeds
+  }
+}
+
+export function setAllFollowers(followers) {
+  return {
+    type: "SET_ALL_FOLLOWERS",
+    followers
   }
 }
 
@@ -81,7 +92,7 @@ export function registerUser(formData, history) {
         } else {
           localStorage.token = data.jwt
           dispatch(loginUser(data.user))
-          history.push("/profile")
+          history.push(`/profile/${data.user.id}`)
         }
       })
       .catch(err => console.log(err))
@@ -106,6 +117,88 @@ export function fetchAllUsers() {
           console.log(data.error)
         } else {
           dispatch(setAllUsers(data))
+        }
+      })
+      .catch(err => console.log(err))
+  }
+}
+
+export function setAllSongs(allSongs) {
+  return {
+    type: "SET_ALL_SONGS",
+    allSongs
+  }
+}
+
+export function fetchAllSongs() {
+  // TODO To fetch all the songs from the database
+  return dispatch => {
+    return fetch(fetchSongsUrl)
+      .then(resp => resp.json())
+      .then(data => {
+        if (data.error) {
+          console.log(data.error)
+        } else {
+          dispatch(setAllSongs(data))
+        }
+      })
+      .catch(err => console.log(err))
+  }
+}
+
+
+export function setCurrentSong(currentSong) {
+  return {
+    type: "SET_CURRENT_SONG",
+    currentSong
+  }
+}
+
+export function postNewSong(formData, user_id, history) {
+  // TODO Send POST fetch request to activestorage with attached audio file
+  return dispatch => {
+    console.log("post da new song bruh", formData)
+    const { title, genre, description, song_link } = formData
+    let songData = new FormData()
+    // let songAudio = new FormData()
+    songData.append("song_link", song_link)
+    songData.append("song[title]", title)
+    songData.append("song[genre]", genre)
+    songData.append("song[description]", description)
+    songData.append("song[user_id]", user_id)
+    // const songData = {...this.state, song_link: newAudio, user_id: this.props.currentUser.id}
+    const reqObjPostSong = {
+      method: "POST",
+      headers: {
+        Accepts: "application/json"
+      },
+      body: songData
+    }
+    // const reqObjPutBlob = {
+    //   method: "PUT",
+    //   headers: {
+    //     Accepts: "application/json"
+    //     // Accepts: "multipart/form-data",
+    //     // "Content-Type": "multipart/form-data"
+    //   },
+    //   body: songAudio
+    // }
+
+    return fetch(fetchSongsUrl, reqObjPostSong)
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          console.log("error: ", data.error)
+        } else {
+          // TODO Redirect to the created song page
+          console.log("success: ", data)
+          dispatch(setCurrentSong(data))
+          // fetch(`${fetchSongsUrl}/${data.id}`, reqObjPutBlob)
+          // .then(res => res.json())
+          // .then(songBlob => {
+          //   console.log('songBlob: ', songBlob)
+          // })
+          // history.push(`/songs/${data.id}`)
         }
       })
       .catch(err => console.log(err))
