@@ -20,7 +20,8 @@ const store = createStore(reducer, persistedState, composeEnhancers(
 
 store.subscribe(throttle(()=>{
   saveState({
-    allUsers: store.getState().allUsers
+    allUsers: store.getState().allUsers,
+    allSongs: store.getState().allSongs
   })
 }, 1000))
 

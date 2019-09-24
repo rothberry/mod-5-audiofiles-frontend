@@ -82,16 +82,8 @@ class App extends React.Component {
           path="/profile/:id"
           render={() => <UserProfile handleLogout={this.handleLogout} />}
         />
-        <Route
-          path="/feed"
-          render={() => <FeedContainer allSongs={this.props.allSongs} />}
-        />
-        <Route
-          path="/newsong"
-          render={() => (
-            <NewSongForm />
-          )}
-        />
+        <Route path="/feed" render={() => <FeedContainer />} />
+        <Route path="/newsong" render={() => <NewSongForm />} />
         {/* </Switch> */}
       </div>
     )
@@ -108,5 +100,12 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   // mapDispatchToProps
-  { currentUser, logoutUser, fetchAllUsers, fetchAllSongs, setAllFolloweds, setAllFollowers }
+  {
+    currentUser,
+    logoutUser,
+    fetchAllUsers,
+    fetchAllSongs,
+    setAllFolloweds,
+    setAllFollowers
+  }
 )(withRouter(App))
