@@ -1,28 +1,24 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { Button, Form, Grid, Header, Segment } from "semantic-ui-react"
-import { withRouter } from "react-router-dom"
+import { Link, withRouter } from "react-router-dom"
 import { postNewSong } from "../actions"
 import ActiveStorageComponent from "./ActiveStorageComponent"
 
 class NewSongForm extends Component {
-  constructor(props) {
-    super()
-    this.audioInput = React.createRef()
-    this.state = {
+    state = {
       title: "",
       genre: "",
       description: "",
       // user_id: "",
       song_link: ""
     }
-  }
 
   handleNewSongSubmit = e => {
     e.preventDefault()
     // const { title, genre, description, song_link } = this.state
     // this.setState({user_id: this.props.currentUser.id})
-    const user_id = this.props.currentUser.id
+    const user_id = this.props.user.id
     console.log(user_id)
     this.props.postNewSong(this.state, user_id, this.props.history)
   }
@@ -34,11 +30,13 @@ class NewSongForm extends Component {
   onFilesAdded = e => {
     const targetSongLink = e.target.files[0]
     this.setState({ song_link: targetSongLink })    
-    // const songData = {...this.state, song_link: newAudio, user_id: this.props.currentUser.id}
+  }
+
+  goBackToProfile = () => {
+    this.props.history(`/profile/${this.props.user.id}`)
   }
 
   render() {
-    // console.log(this.state)
     // console.log(this.props)
     return (
       <div className="new-song-form">
@@ -69,15 +67,16 @@ class NewSongForm extends Component {
                   type="text"
                   name="description"
                 />
-                {/* <input
+                <input
                   type="file"
                   // ref={this.audioInput}
                   onChange={this.onFilesAdded}
-                /> */}
-                <ActiveStorageComponent />
+                />
+                {/* <ActiveStorageComponent /> */}
                 <Button type="submit" primary fluid size="large">
                   Submit New Song
                 </Button>
+                {/* <Button as={Link} onClick={this.goBackToProfile}>Go Back</Button> */}
               </Segment>
             </Form>
           </Grid.Column>
@@ -87,7 +86,13 @@ class NewSongForm extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  }
+}
+
 export default connect(
-  null,
+  mapStateToProps,
   { postNewSong }
 )(withRouter(NewSongForm))

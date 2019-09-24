@@ -22,7 +22,6 @@ class LoginForm extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <div className="login-form">
         <Grid textAlign="center" verticalAlign="middle">

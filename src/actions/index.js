@@ -161,12 +161,11 @@ export function postNewSong(formData, user_id, history) {
     const { title, genre, description, song_link } = formData
     let songData = new FormData()
     // let songAudio = new FormData()
-    songData.append("song_link", song_link)
+    songData.append("song[song_link]", song_link)
     songData.append("song[title]", title)
     songData.append("song[genre]", genre)
     songData.append("song[description]", description)
     songData.append("song[user_id]", user_id)
-    // const songData = {...this.state, song_link: newAudio, user_id: this.props.currentUser.id}
     const reqObjPostSong = {
       method: "POST",
       headers: {
@@ -174,16 +173,6 @@ export function postNewSong(formData, user_id, history) {
       },
       body: songData
     }
-    // const reqObjPutBlob = {
-    //   method: "PUT",
-    //   headers: {
-    //     Accepts: "application/json"
-    //     // Accepts: "multipart/form-data",
-    //     // "Content-Type": "multipart/form-data"
-    //   },
-    //   body: songAudio
-    // }
-
     return fetch(fetchSongsUrl, reqObjPostSong)
       .then(res => res.json())
       .then(data => {
@@ -193,12 +182,6 @@ export function postNewSong(formData, user_id, history) {
           // TODO Redirect to the created song page
           console.log("success: ", data)
           dispatch(setCurrentSong(data))
-          // fetch(`${fetchSongsUrl}/${data.id}`, reqObjPutBlob)
-          // .then(res => res.json())
-          // .then(songBlob => {
-          //   console.log('songBlob: ', songBlob)
-          // })
-          // history.push(`/songs/${data.id}`)
         }
       })
       .catch(err => console.log(err))

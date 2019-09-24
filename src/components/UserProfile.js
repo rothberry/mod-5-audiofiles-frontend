@@ -24,6 +24,10 @@ class UserProfile extends Component {
     // TODO Sends fetch to Followings Model with
   }
 
+  goToNewSong = () => {
+    this.props.history.push('/newsong')
+  }
+
   render() {
     const displayUserID = Number(this.props.history.location.pathname.slice(9))
     // const { username, name, location, bio, id } = this.props.user
@@ -52,6 +56,8 @@ class UserProfile extends Component {
             Follow Me!
           </Button>
         )}
+        <br />
+        <Link onClick={this.goToNewSong}>New Song!</Link> <br />
         <Link onClick={this.props.handleLogout}>Logout</Link>
       </div>
     ) : (

@@ -89,10 +89,7 @@ class App extends React.Component {
         <Route
           path="/newsong"
           render={() => (
-            <NewSongForm
-              currentUser={this.props.user}
-              handleChange={this.handleChange}
-            />
+            <NewSongForm />
           )}
         />
         {/* </Switch> */}

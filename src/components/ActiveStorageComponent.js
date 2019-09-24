@@ -13,7 +13,7 @@ class ActiveStorageComponent extends Component {
           path: "/songs",
           model: "Song",
           attribute: "song_link",
-          method: "PUT"
+          method: "POST"
         }}
         onSubmit={song => this.setState({ song_link: song.song_link })}
         render={({ handleUpload, uploads, ready }) => (
