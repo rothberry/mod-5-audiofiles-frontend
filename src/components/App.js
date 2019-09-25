@@ -5,6 +5,8 @@ import LoginForm from "./LoginForm"
 import NewUserForm from "./NewUserForm"
 import UserProfile from "./UserProfile"
 import FeedContainer from "./FeedContainer"
+import NewSongForm from "./NewSongForm"
+// import SongFeedComponent from "./SongFeedComponent"
 import { connect } from "react-redux"
 import { Router, Route, withRouter, Switch, Redirect } from "react-router-dom"
 import {
@@ -15,8 +17,6 @@ import {
   setAllFolloweds,
   setAllFollowers
 } from "../actions"
-import { reducer } from "../reducers"
-import NewSongForm from "./NewSongForm"
 
 class App extends React.Component {
   // ! FOR TESTING OUT REDUX
@@ -84,6 +84,7 @@ class App extends React.Component {
         />
         <Route path="/feed" render={() => <FeedContainer />} />
         <Route path="/newsong" render={() => <NewSongForm />} />
+        {/* <Route path='/songs/:id' render={() => </>} /> */}
         {/* </Switch> */}
       </div>
     )

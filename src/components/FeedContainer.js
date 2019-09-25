@@ -1,27 +1,23 @@
+/*eslint-disable */
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
 import Waveform from "./Waveform"
-// import { fetchAllSongs } from "../actions"
+import SongFeedComponent from "./SongFeedComponent"
+import { Grid } from "semantic-ui-react"
 
 class FeedContainer extends Component {
-
   render() {
-    const { allSongs } = this.props
-    // console.log("allsongs: ", allSongs)
-    // const mario = require('../mario.mp3') //? For testing
-    const filteredWithSongLink = allSongs.filter(song => song.song_link).slice(0,3)
-    console.log('filter: ', filteredWithSongLink)
+    const { allSongs, followeds, followers } = this.props
+    const filteredWithSongLink = allSongs
+      .filter(song => song.song_link)
+      .slice(0, 3)
+    // console.log('filter: ', filteredWithSongLink)
     const mappedFeed = filteredWithSongLink.map(songData => {
-      console.log(songData)
+      // console.log(songData)
       return (
         <div className={`waveform-${songData.id}`}>
-          {/* <Waveform songData={songData.song_link} /> */}
-          <h1>{songData.song.title}</h1>
-          <h1>{songData.song.user.username}</h1>
-          <h2>{songData.song.genre}</h2>
-          <h3>{songData.song.description}</h3>
-          <audio controls src={songData.song_link} />
+          <SongFeedComponent songData={songData} />
         </div>
       )
     })
@@ -30,11 +26,17 @@ class FeedContainer extends Component {
     return (
       <div className="feed-container">
         da Feed
-        {mappedFeed}
-        {/* <audio controls='controls' src={allSongs[14].song_link} /> */}
-        {/* <Waveform songData={allSongs[14]}/> */}
+        <Grid columns={2}>
+          <Grid.Column>
+            {mappedFeed}
+          </Grid.Column>
+          <Grid.Column>
+            <h1>some crap on the right ride</h1>
+          </Grid.Column>
+        </Grid>
+        {/* <SongFeedComponent songData={allSongs[14]}/> */}
       </div>
-    ) 
+    )
     // : (
     //   <div>loading...</div>
     // )
@@ -44,6 +46,8 @@ class FeedContainer extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
+    followeds: state.followeds,
+    followers: state.followers,
     // allUsers: state.allUsers,
     allSongs: state.allSongs
   }
