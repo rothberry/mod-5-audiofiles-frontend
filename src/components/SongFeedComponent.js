@@ -13,8 +13,8 @@ class SongFeedComponent extends Component {
   }
 
   goToSongPage = e => {
-    // const song_id = this.props.songData.song.user.id
-    // this.props.history.push(`/profile/${song_id}`)
+    const song_id = this.props.songData.song.id
+    this.props.history.push(`/songs/${song_id}`)
   }
 
   render() {
@@ -27,7 +27,7 @@ class SongFeedComponent extends Component {
         song: { user }
       }
     } = this.props
-    // console.log(song)
+    // console.log(song.tags)
     // TODO ADD the SongTags to Component
     return (
       <div className={`song-comp-${song.id}`}>

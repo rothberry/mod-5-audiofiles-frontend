@@ -6,21 +6,31 @@ import { Link, withRouter } from "react-router-dom"
 import { postNewSong } from "../actions"
 import ActiveStorageComponent from "./ActiveStorageComponent"
 
+
 class NewSongForm extends Component {
-    state = {
-      title: "",
-      genre: "",
-      description: "",
-      // user_id: "",
-      song_link: ""
-    }
+  state = {
+    title: "",
+    genre: "",
+    description: "",
+    // user_id: "",
+    song_link: "",
+    selectedTags: [],
+    allTags: []
+  }
+  
+  componentDidMount() {
+    const fetchTagUrl = "http://localhost:3000/tags"
+    // const banana = document.getElementById('tag-dropdown')
+    fetch(fetchTagUrl)
+      .then(res => res.json())
+      .then(data => {
+        this.setState({ allTags: data })
+      })
+  }
 
   handleNewSongSubmit = e => {
     e.preventDefault()
-    // const { title, genre, description, song_link } = this.state
-    // this.setState({user_id: this.props.currentUser.id})
     const user_id = this.props.user.id
-    console.log(user_id)
     this.props.postNewSong(this.state, user_id, this.props.history)
   }
 
@@ -28,9 +38,13 @@ class NewSongForm extends Component {
     this.setState({ [e.target.name]: e.target.value })
   }
 
+  handleSelectedTags = (e, {value}) => {
+    this.setState({selectedTags: value})
+  }
+
   onFilesAdded = e => {
     const targetSongLink = e.target.files[0]
-    this.setState({ song_link: targetSongLink })    
+    this.setState({ song_link: targetSongLink })
   }
 
   goBackToProfile = () => {
@@ -39,6 +53,17 @@ class NewSongForm extends Component {
 
   render() {
     // console.log(this.props)
+    const tagOptions = this.state.allTags
+      ? this.state.allTags.map(tag => {
+          return {
+            key: tag.name,
+            text: tag.name,
+            value: tag.name
+          }
+        })
+      : null
+    // console.log(this.state)
+    // console.log(tagOptions)
     return (
       <div className="new-song-form">
         <Grid textAlign="center" verticalAlign="middle">
@@ -67,6 +92,19 @@ class NewSongForm extends Component {
                   placeholder="Description"
                   type="text"
                   name="description"
+                />
+                {/* NEED TO ADD INPUT ABILITY */}
+                <Form.Dropdown
+                  onChange={this.handleSelectedTags}
+                  search
+                  selection
+                  multiple
+                  input
+                  id='tag-dropdown'
+                  // options={testObj}
+                  options={tagOptions}
+                  placeholder="Select Tags"
+                  name="selectedTags"
                 />
                 <input
                   type="file"

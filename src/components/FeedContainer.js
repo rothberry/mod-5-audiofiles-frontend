@@ -11,7 +11,7 @@ class FeedContainer extends Component {
     const { allSongs, followeds, followers } = this.props
     const filteredWithSongLink = allSongs
       .filter(song => song.song_link)
-      .slice(0, 3)
+      // .slice(0, 3)
     // console.log('filter: ', filteredWithSongLink)
     const mappedFeed = filteredWithSongLink.map(songData => {
       // console.log(songData)

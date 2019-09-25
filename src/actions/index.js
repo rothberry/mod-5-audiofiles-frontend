@@ -158,7 +158,7 @@ export function postNewSong(formData, user_id, history) {
   // TODO Send POST fetch request to activestorage with attached audio file
   return dispatch => {
     console.log("post da new song bruh", formData)
-    const { title, genre, description, song_link } = formData
+    const { title, genre, description, song_link,  selectedTags } = formData
     let songData = new FormData()
     // let songAudio = new FormData()
     songData.append("song[song_link]", song_link)
@@ -166,6 +166,7 @@ export function postNewSong(formData, user_id, history) {
     songData.append("song[genre]", genre)
     songData.append("song[description]", description)
     songData.append("song[user_id]", user_id)
+    songData.append("tags[tags]", selectedTags)
     const reqObjPostSong = {
       method: "POST",
       headers: {
@@ -187,3 +188,26 @@ export function postNewSong(formData, user_id, history) {
       .catch(err => console.log(err))
   }
 }
+// ! Add allTags
+// export function setAllTags(allTags) {
+//   return {
+//     type: "SET_ALL_SONGS",
+//     allTags
+//   }
+// }
+
+// export function fetchAllSongs() {
+//   // TODO To fetch all the songs from the database
+//   return dispatch => {
+//     return fetch(fetchSongsUrl)
+//       .then(resp => resp.json())
+//       .then(data => {
+//         if (data.error) {
+//           console.log(data.error)
+//         } else {
+//           dispatch(setAllTags(data))
+//         }
+//       })
+//       .catch(err => console.log(err))
+//   }
+// }

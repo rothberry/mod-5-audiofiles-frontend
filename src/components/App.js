@@ -6,6 +6,7 @@ import NewUserForm from "./NewUserForm"
 import UserProfile from "./UserProfile"
 import FeedContainer from "./FeedContainer"
 import NewSongForm from "./NewSongForm"
+import Nav from "./Nav"
 // import SongFeedComponent from "./SongFeedComponent"
 import { connect } from "react-redux"
 import { Router, Route, withRouter, Switch, Redirect } from "react-router-dom"
@@ -17,6 +18,7 @@ import {
   setAllFolloweds,
   setAllFollowers
 } from "../actions"
+import SongShowPage from "./SongShowPage"
 
 class App extends React.Component {
   // ! FOR TESTING OUT REDUX
@@ -75,15 +77,20 @@ class App extends React.Component {
     return (
       <div className="app-container">
         {/* <Switch> */}
+        <Nav />
         <Route path="/login" render={() => <LoginForm />} />
         <Route path="/createaccount" render={() => <NewUserForm />} />
         <Route
-          // TODO Need to go to /profile/${displayUserId}
           path="/profile/:id"
           render={() => <UserProfile handleLogout={this.handleLogout} />}
         />
         <Route path="/feed" render={() => <FeedContainer />} />
         <Route path="/newsong" render={() => <NewSongForm />} />
+        <Route
+          path="/songs/:id"
+          render={() => <SongShowPage />}
+        />
+
         {/* <Route path='/songs/:id' render={() => </>} /> */}
         {/* </Switch> */}
       </div>

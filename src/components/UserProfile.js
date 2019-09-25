@@ -14,10 +14,6 @@ class UserProfile extends Component {
     }
   }
 
-  // componentDidMount() {
-  //   this.props.fetchFollowing()
-  // }
-
   handleFollowUser = (followed_id, follower_id) => {
     console.log("followed: ", followed_id)
     console.log("follower: ", follower_id)
@@ -30,9 +26,6 @@ class UserProfile extends Component {
 
   render() {
     const displayUserID = Number(this.props.history.location.pathname.slice(9))
-    // const { username, name, location, bio, id } = this.props.user
-    // const { allUsers } = this.props
-    // this.props.fetchFollowing(this.props.user.id)
     const displayUser = this.findUser(displayUserID)
     const { username, name, location, bio, id } = displayUser
     const isCurrentUser = id === this.props.user.id
@@ -57,13 +50,10 @@ class UserProfile extends Component {
           </Button>
         )}
         <br />
-        <Link onClick={this.goToNewSong}>New Song!</Link> <br />
-        <Link onClick={this.props.handleLogout}>Logout</Link>
       </div>
     ) : (
       <div>
         No User Profile
-        <Link onClick={this.props.handleLogout}>Logout</Link>
       </div>
     )
   }

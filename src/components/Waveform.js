@@ -18,7 +18,7 @@ class Waveform extends React.Component {
   }
   componentDidMount() {
     const { waveHeight, responsive, splitChannels, mediaControls, maxCanvasWidth, song } = this.props
-    console.log(this.props.user)
+    // console.log(this.props.user)
     let setIsFavorite = song.favorites.filter(fav => {
       return fav.user_id === this.props.user.id
     })
@@ -41,6 +41,7 @@ class Waveform extends React.Component {
       })
       // this.$waveform.style.backgroundColor = "black"
       this.wavesurfer.load(this.props.song_link)
+      this.wavesurfer.setVolume(.2)
       this.setState({favorites: this.props.song.favorites.length})
     } else {
       console.log('waveform loading...')
@@ -65,6 +66,7 @@ class Waveform extends React.Component {
   }
 
   handleFavorite = (e) => {
+    e.preventDefault()
     console.log(this.props.user.id)
     const fetchFavoritesURL = 'http://localhost:3000/favorites'
     const reqObj = {
@@ -85,7 +87,6 @@ class Waveform extends React.Component {
           isFavorite: !this.state.isFavorite
         })
       }
-
     })
     .catch(err => console.log(err))
   }
@@ -123,8 +124,8 @@ class Waveform extends React.Component {
 }
 const mapStateToProps = state => {
   return {
-    user: state.user,
-    allUsers: state.allUsers
+    user: state.user
+    // allUsers: state.allUsers
   }
 }
 
