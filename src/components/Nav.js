@@ -1,9 +1,9 @@
 /*eslint-disable */
 import React, { Component } from "react"
-import { Link, withRouter } from "react-router-dom"
+import { Link, withRouter, NavLink } from "react-router-dom"
 import { connect } from "react-redux"
-import { Button, Grid, Header, Label } from "semantic-ui-react"
-import { logoutUser } from "../actions"
+import { Button, Grid, Header, Label, Sticky } from "semantic-ui-react"
+import { logoutUser, findDisplayUser } from "../actions"
 
 class Nav extends Component {
   handleLogout = e => {
@@ -12,47 +12,41 @@ class Nav extends Component {
     this.props.history.push("/login")
   }
 
+  goToCurrentUserProfile = (user_id) => {
+    this.props.history.push(`/profile/${user_id}`)
+    this.props.findDisplayUser(this.props.allUsers, this.props.history)
+  }
+
   render() {
-    console.log(this.props)
     return (
+      // <Sticky>
       <div className="nav-bar-container">
-        <div className="nav-bar-passive">
-          <Button as={Link} to="/feed">
-            Feed
-          </Button>
-        </div>
-        {this.props.user.isLoggedIn ? (
-          <div className="nav-bar-active-in">
-            <Button as={Link} onClick={this.handleLogout}>
-              Logout
-            </Button>
-            <Button as={Link} to={`/profile/${this.props.user.id}`}>
-              Prof
-            </Button>
-            <Button as={Link} to="/newsong">
-              Upload Song
-            </Button>
-          </div>
-        ) : (
-          <div className="nav-bar-active-in">
-            <Button as={Link} to="/login">
-              Login
-            </Button>
-          </div>
-        )}
+        <Button as={Link} to="/feed" content="Feed" />
+        {/* {this.props.user.isLoggedIn ? ( */}
+        <Button
+          as={Link}
+          onClick={(user_id) => this.goToCurrentUserProfile(this.props.user.id)}
+          content="Prof"
+        />
+        <Button as={Link} to="/newsong" content="Upload Song" />
+        <Button as={Link} onClick={this.handleLogout} content="Logout" />
+        {/* ) : ( */}
+        <Button as={Link} to="/login" content="Login" />
+        {/* )} */}
       </div>
+      // </Sticky>
     )
   }
 }
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    user: state.user,
+    allUsers: state.allUsers
   }
 }
 
 export default connect(
   mapStateToProps,
-  // null,
-  { logoutUser }
+  { logoutUser, findDisplayUser }
 )(withRouter(Nav))

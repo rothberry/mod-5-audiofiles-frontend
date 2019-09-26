@@ -44,11 +44,16 @@ class NewSongForm extends Component {
 
   onFilesAdded = e => {
     const targetSongLink = e.target.files[0]
-    this.setState({ song_link: targetSongLink })
+    const titleValue = targetSongLink.name.slice(0,-4)
+    this.setState({ song_link: targetSongLink, title: titleValue })
   }
 
   goBackToProfile = () => {
     this.props.history(`/profile/${this.props.user.id}`)
+  }
+
+  setTitleOnFileLoad = () => {
+    
   }
 
   render() {
@@ -62,7 +67,7 @@ class NewSongForm extends Component {
           }
         })
       : null
-    // console.log(this.state)
+    console.log(this.state)
     // console.log(tagOptions)
     return (
       <div className="new-song-form">
@@ -78,6 +83,7 @@ class NewSongForm extends Component {
                 <Form.Input
                   onChange={this.handleNewSongChange}
                   placeholder="Title"
+                  value={this.state.title}
                   type="text"
                   name="title"
                 />
@@ -108,7 +114,7 @@ class NewSongForm extends Component {
                 />
                 <input
                   type="file"
-                  // ref={this.audioInput}
+                  accept='audio/*'
                   onChange={this.onFilesAdded}
                 />
                 {/* <ActiveStorageComponent /> */}

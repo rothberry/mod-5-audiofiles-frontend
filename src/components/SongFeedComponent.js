@@ -3,10 +3,11 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
 import { Button, Grid, Header } from "semantic-ui-react"
-
 import Waveform from "./Waveform"
+import { setDisplaySong } from "../actions"
 
 class SongFeedComponent extends Component {
+
   goToUserProfile = e => {
     const user_id = this.props.songData.song.user.id
     this.props.history.push(`/profile/${user_id}`)
@@ -15,6 +16,7 @@ class SongFeedComponent extends Component {
   goToSongPage = e => {
     const song_id = this.props.songData.song.id
     this.props.history.push(`/songs/${song_id}`)
+    this.props.setDisplaySong(this.props.allSongs, this.props.history)
   }
 
   render() {
@@ -27,8 +29,7 @@ class SongFeedComponent extends Component {
         song: { user }
       }
     } = this.props
-    // console.log(song.tags)
-    // TODO ADD the SongTags to Component
+    // console.log(songData)
     return (
       <div className={`song-comp-${song.id}`}>
         <Grid.Row columns={4}>
@@ -41,20 +42,20 @@ class SongFeedComponent extends Component {
             </span>
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row celled>
+        <Grid.Row>
           <Grid.Column floated="left">
-            <span
-              onClick={this.goToUserProfile}
-              style={{ fontStyle: "italic", cursor: "pointer" }}
-            >
-              {user.username}
-            </span>
+            {this.props.userClickEnabled ? null : (
+              <span
+                onClick={this.goToUserProfile}
+                style={{ fontStyle: "italic", cursor: "pointer" }}
+              >
+                {user.username}
+              </span>
+            )}
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
           <Waveform
-            // numOfFavorites={song.favorites}
-            // song_id={song.id}
             song={song}
             song_link={songData.song_link}
             waveHeight={100}
@@ -72,14 +73,13 @@ class SongFeedComponent extends Component {
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    user: state.user,
     // allUsers: state.allUsers,
-    // allSongs: state.allSongs
+    allSongs: state.allSongs
   }
 }
 
 export default connect(
   mapStateToProps,
-  // null,
-  null
+  { setDisplaySong }
 )(withRouter(SongFeedComponent))

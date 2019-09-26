@@ -14,6 +14,7 @@ class Waveform extends React.Component {
       favorites: 0,
       isFavorite: false,
       pos: 0
+      // duration: 0
     }
   }
   componentDidMount() {
@@ -42,7 +43,11 @@ class Waveform extends React.Component {
       // this.$waveform.style.backgroundColor = "black"
       this.wavesurfer.load(this.props.song_link)
       this.wavesurfer.setVolume(.2)
-      this.setState({favorites: this.props.song.favorites.length})
+      // TODO Add duration to waveform
+      this.setState({
+        favorites: this.props.song.favorites.length,
+        duration: this.wavesurfer.getDuration()
+      })
     } else {
       console.log('waveform loading...')
     }
@@ -94,7 +99,7 @@ class Waveform extends React.Component {
   render() {
     // return this.props.src ? (
     const buttonStyle = {width: '20%'}
-    // const favColor = this.state.isFavorite ? 
+    // const favColor = this.state.isFavorite ?
     // console.log(this.state)
     return (
       <div className="waveform" style={{cursor: 'text'}}>
@@ -113,6 +118,7 @@ class Waveform extends React.Component {
             {this.state.favorites}
           </Label>
         </Button>
+        <Label>{this.state.duration}</Label>
 
         {/* </Button> */}
       </div>

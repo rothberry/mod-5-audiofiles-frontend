@@ -27,16 +27,9 @@ class App extends React.Component {
   //   allFolloweds: []
   // }
   componentDidMount() {
+    this.props.currentUser()
     this.props.fetchAllSongs()
     this.props.fetchAllUsers()
-    this.props.currentUser()
-    // this.props.fetchFollowing(this.props.user.id)
-  }
-
-  handleLogout = e => {
-    localStorage.clear()
-    this.props.logoutUser()
-    this.props.history.push("/login")
   }
 
   setAllFollowings = () => {
@@ -78,19 +71,13 @@ class App extends React.Component {
       <div className="app-container">
         {/* <Switch> */}
         <Nav />
+        <br /> <br />
         <Route path="/login" render={() => <LoginForm />} />
         <Route path="/createaccount" render={() => <NewUserForm />} />
-        <Route
-          path="/profile/:id"
-          render={() => <UserProfile handleLogout={this.handleLogout} />}
-        />
+        <Route path="/profile/:id" render={() => <UserProfile />} />
         <Route path="/feed" render={() => <FeedContainer />} />
         <Route path="/newsong" render={() => <NewSongForm />} />
-        <Route
-          path="/songs/:id"
-          render={() => <SongShowPage />}
-        />
-
+        <Route path="/songs/:id" render={() => <SongShowPage />} />
         {/* <Route path='/songs/:id' render={() => </>} /> */}
         {/* </Switch> */}
       </div>

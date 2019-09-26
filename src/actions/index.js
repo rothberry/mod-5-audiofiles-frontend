@@ -146,11 +146,10 @@ export function fetchAllSongs() {
   }
 }
 
-
-export function setCurrentSong(currentSong) {
+export function addNewSongToFeed(newSong) {
   return {
-    type: "SET_CURRENT_SONG",
-    currentSong
+    type: "ADD_SONG_TO_FEED",
+    newSong
   }
 }
 
@@ -158,7 +157,7 @@ export function postNewSong(formData, user_id, history) {
   // TODO Send POST fetch request to activestorage with attached audio file
   return dispatch => {
     console.log("post da new song bruh", formData)
-    const { title, genre, description, song_link,  selectedTags } = formData
+    const { title, genre, description, song_link, selectedTags } = formData
     let songData = new FormData()
     // let songAudio = new FormData()
     songData.append("song[song_link]", song_link)
@@ -182,32 +181,54 @@ export function postNewSong(formData, user_id, history) {
         } else {
           // TODO Redirect to the created song page
           console.log("success: ", data)
-          dispatch(setCurrentSong(data))
+          dispatch(addNewSongToFeed(data))
+          history.push(`/songs/${data.song.id}`)
         }
       })
       .catch(err => console.log(err))
   }
 }
-// ! Add allTags
-// export function setAllTags(allTags) {
-//   return {
-//     type: "SET_ALL_SONGS",
-//     allTags
-//   }
-// }
 
-// export function fetchAllSongs() {
-//   // TODO To fetch all the songs from the database
-//   return dispatch => {
-//     return fetch(fetchSongsUrl)
-//       .then(resp => resp.json())
-//       .then(data => {
-//         if (data.error) {
-//           console.log(data.error)
-//         } else {
-//           dispatch(setAllTags(data))
-//         }
-//       })
-//       .catch(err => console.log(err))
-//   }
-// }
+// ! Find Display User
+export function setDisplayUser(displayUser) {
+  return {
+    type: "SET_DISPLAY_USER",
+    displayUser
+  }
+}
+
+// ? Using the HISTORY path to get user-id
+// ? send id through finduser func and set the store of display user to the result
+export function findDisplayUser(allUsers, history) {
+  return dispatch => {
+    const displayUserID = Number(history.location.pathname.slice(9))
+    console.log(displayUserID)
+    const displayUser = allUsers.find(u => {
+      return u.id === displayUserID
+    })
+    console.log("displayUser: ", displayUser)
+    dispatch(setDisplayUser(displayUser))
+  }
+}
+
+// ! Find Display Song
+export function setDisplaySong(displaySong) {
+  return {
+    type: "SET_DISPLAY_SONG",
+    displaySong
+  }
+}
+
+export function findDisplaySong(allSongs, history) {
+  console.log("finding da song")
+  return dispatch => {
+    const displaySongID = Number(history.location.pathname.slice(7))
+    const displaySong = allSongs.find(song => {
+      return song.song.id === displaySongID
+    })
+    // console.log("displaySong: ", displaySong)
+    dispatch(setDisplaySong(displaySong))
+  }
+}
+
+// ! Add allTags

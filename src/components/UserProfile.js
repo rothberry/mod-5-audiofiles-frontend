@@ -2,16 +2,14 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
-import { Button } from "semantic-ui-react"
-// import {fetchFollowing} from '../actions'
+import { Button, Grid } from "semantic-ui-react"
+import SongFeedComponent from "./SongFeedComponent"
+import {findDisplayUser} from '../actions'
 
 class UserProfile extends Component {
-  findUser = displayUserID => {
-    if (this.props.allUsers.length > 0) {
-      return this.props.allUsers.find(u => {
-        return u.id === displayUserID
-      })
-    }
+
+  componentDidMount() {
+    this.props.findDisplayUser(this.props.allUsers, this.props.history)
   }
 
   handleFollowUser = (followed_id, follower_id) => {
@@ -20,41 +18,42 @@ class UserProfile extends Component {
     // TODO Sends fetch to Followings Model with
   }
 
-  goToNewSong = () => {
-    this.props.history.push('/newsong')
-  }
-
   render() {
-    const displayUserID = Number(this.props.history.location.pathname.slice(9))
-    const displayUser = this.findUser(displayUserID)
-    const { username, name, location, bio, id } = displayUser
+    // console.log(this.props.displayUser)
+    const { username, name, location, bio, id } = this.props.displayUser
+    const filteredDisplayUserSongs = this.props.allSongs.filter(displaySong => {
+      return displaySong.song.user_id === id 
+    })
+    const mappedDisplayUserSongFeed = filteredDisplayUserSongs.map(displaySong => {
+      return <SongFeedComponent songData={displaySong} userClickDisabled={true}/>
+    })
     const isCurrentUser = id === this.props.user.id
-    const isFollowing = this.props.user.id === this.props.followeds.find(f => f.id === id )
-    console.log('current user? ', isCurrentUser)
-    console.log('following? ', isFollowing)
-    return displayUser ? (
+    const isFollowing = this.props.user.id === this.props.followeds.find(f => f.id === id)
+    // console.log("current user? ", isCurrentUser)
+    // console.log("following? ", isFollowing)
+    return true ? (
       <div className={`user-profile-${id}`}>
-        Profile Page
-        <h1>Username: {username}</h1>
-        <h1>Name: {name}</h1>
-        <h1>location: {location}</h1>
-        <p>Bio: {bio}</p>
-        {
-          isCurrentUser ? null : (
-          <Button
-            onClick={(followed_id, follower_id) =>
-              this.handleFollowUser(displayUserID, this.props.user.id)
-            }
-          >
-            Follow Me!
-          </Button>
-        )}
-        <br />
+        <Grid columns={2}>
+          <Grid.Column>{mappedDisplayUserSongFeed}</Grid.Column>
+          <Grid.Column>
+            <h1>Username: {username}</h1>
+            <h1>Name: {name}</h1>
+            <h1>location: {location}</h1>
+            <p>Bio: {bio}</p>
+            {isCurrentUser ? null : (
+              <Button
+                onClick={(followed_id, follower_id) =>
+                  this.handleFollowUser(id, this.props.user.id)
+                }
+              >
+                Follow Me!
+              </Button>
+            )}
+          </Grid.Column>
+        </Grid>
       </div>
     ) : (
-      <div>
-        No User Profile
-      </div>
+      <div>No User Profile</div>
     )
   }
 }
@@ -62,6 +61,8 @@ class UserProfile extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
+    displayUser: state.displayUser,
+    allSongs: state.allSongs,
     allUsers: state.allUsers,
     followeds: state.followeds,
     followers: state.followers
@@ -69,6 +70,6 @@ const mapStateToProps = state => {
 }
 export default connect(
   mapStateToProps,
-  null
-  // {fetchFollowing}
+  // null
+  {findDisplayUser}
 )(withRouter(UserProfile))
