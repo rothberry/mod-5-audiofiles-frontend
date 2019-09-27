@@ -4,10 +4,9 @@ import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
 import { Button, Grid } from "semantic-ui-react"
 import SongFeedComponent from "./SongFeedComponent"
-import {findDisplayUser} from '../actions'
+import { findDisplayUser } from "../actions"
 
 class UserProfile extends Component {
-
   componentDidMount() {
     this.props.findDisplayUser(this.props.allUsers, this.props.history)
   }
@@ -22,13 +21,19 @@ class UserProfile extends Component {
     // console.log(this.props.displayUser)
     const { username, name, location, bio, id } = this.props.displayUser
     const filteredDisplayUserSongs = this.props.allSongs.filter(displaySong => {
-      return displaySong.song.user_id === id 
+      return displaySong.song.user_id === id
     })
-    const mappedDisplayUserSongFeed = filteredDisplayUserSongs.map(displaySong => {
-      return <SongFeedComponent songData={displaySong} userClickDisabled={true}/>
-    })
+    const mappedDisplayUserSongFeed = filteredDisplayUserSongs.map(
+      displaySong => {
+        return (
+          <SongFeedComponent songData={displaySong} userClickDisabled={true} />
+        )
+      }
+    )
+    // TODO Move isCurrentUser to Store
     const isCurrentUser = id === this.props.user.id
-    const isFollowing = this.props.user.id === this.props.followeds.find(f => f.id === id)
+    const isFollowing =
+      this.props.user.id === this.props.followeds.find(f => f.id === id)
     // console.log("current user? ", isCurrentUser)
     // console.log("following? ", isFollowing)
     return true ? (
@@ -70,6 +75,5 @@ const mapStateToProps = state => {
 }
 export default connect(
   mapStateToProps,
-  // null
-  {findDisplayUser}
+  { findDisplayUser }
 )(withRouter(UserProfile))

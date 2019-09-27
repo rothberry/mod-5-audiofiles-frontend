@@ -4,15 +4,12 @@ import { connect } from "react-redux"
 import { Button, Form, Grid, Header, Segment } from "semantic-ui-react"
 import { Link, withRouter } from "react-router-dom"
 import { postNewSong } from "../actions"
-import ActiveStorageComponent from "./ActiveStorageComponent"
-
 
 class NewSongForm extends Component {
   state = {
     title: "",
     genre: "",
     description: "",
-    // user_id: "",
     song_link: "",
     selectedTags: [],
     allTags: []
@@ -20,7 +17,6 @@ class NewSongForm extends Component {
   
   componentDidMount() {
     const fetchTagUrl = "http://localhost:3000/tags"
-    // const banana = document.getElementById('tag-dropdown')
     fetch(fetchTagUrl)
       .then(res => res.json())
       .then(data => {
@@ -52,10 +48,6 @@ class NewSongForm extends Component {
     this.props.history(`/profile/${this.props.user.id}`)
   }
 
-  setTitleOnFileLoad = () => {
-    
-  }
-
   render() {
     // console.log(this.props)
     const tagOptions = this.state.allTags
@@ -67,8 +59,7 @@ class NewSongForm extends Component {
           }
         })
       : null
-    console.log(this.state)
-    // console.log(tagOptions)
+    // console.log(this.state)
     return (
       <div className="new-song-form">
         <Grid textAlign="center" verticalAlign="middle">
@@ -99,7 +90,6 @@ class NewSongForm extends Component {
                   type="text"
                   name="description"
                 />
-                {/* NEED TO ADD INPUT ABILITY */}
                 <Form.Dropdown
                   onChange={this.handleSelectedTags}
                   search
@@ -107,7 +97,6 @@ class NewSongForm extends Component {
                   multiple
                   input
                   id='tag-dropdown'
-                  // options={testObj}
                   options={tagOptions}
                   placeholder="Select Tags"
                   name="selectedTags"
@@ -117,11 +106,9 @@ class NewSongForm extends Component {
                   accept='audio/*'
                   onChange={this.onFilesAdded}
                 />
-                {/* <ActiveStorageComponent /> */}
                 <Button type="submit" primary fluid size="large">
                   Submit New Song
                 </Button>
-                {/* <Button as={Link} onClick={this.goBackToProfile}>Go Back</Button> */}
               </Segment>
             </Form>
           </Grid.Column>

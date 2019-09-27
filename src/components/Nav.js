@@ -1,6 +1,6 @@
 /*eslint-disable */
 import React, { Component } from "react"
-import { Link, withRouter, NavLink } from "react-router-dom"
+import { Link, withRouter } from "react-router-dom"
 import { connect } from "react-redux"
 import { Button, Grid, Header, Label, Sticky } from "semantic-ui-react"
 import { logoutUser, findDisplayUser } from "../actions"
@@ -12,12 +12,13 @@ class Nav extends Component {
     this.props.history.push("/login")
   }
 
-  goToCurrentUserProfile = (user_id) => {
+  goToCurrentUserProfile = user_id => {
     this.props.history.push(`/profile/${user_id}`)
     this.props.findDisplayUser(this.props.allUsers, this.props.history)
   }
 
   render() {
+    // TODO Make the NAVBAR conditionally render based on 'isCurrentUser' and 'isLoggedIn'
     return (
       // <Sticky>
       <div className="nav-bar-container">
@@ -25,7 +26,7 @@ class Nav extends Component {
         {/* {this.props.user.isLoggedIn ? ( */}
         <Button
           as={Link}
-          onClick={(user_id) => this.goToCurrentUserProfile(this.props.user.id)}
+          onClick={user_id => this.goToCurrentUserProfile(this.props.user.id)}
           content="Prof"
         />
         <Button as={Link} to="/newsong" content="Upload Song" />

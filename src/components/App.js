@@ -7,7 +7,6 @@ import UserProfile from "./UserProfile"
 import FeedContainer from "./FeedContainer"
 import NewSongForm from "./NewSongForm"
 import Nav from "./Nav"
-// import SongFeedComponent from "./SongFeedComponent"
 import { connect } from "react-redux"
 import { Router, Route, withRouter, Switch, Redirect } from "react-router-dom"
 import {
@@ -16,20 +15,20 @@ import {
   fetchAllUsers,
   fetchAllSongs,
   setAllFolloweds,
-  setAllFollowers
+  setAllFollowers,
+  fetchAllComments
 } from "../actions"
 import SongShowPage from "./SongShowPage"
 
 class App extends React.Component {
   // ! FOR TESTING OUT REDUX
-  // state = {
-  //   allFollowers: [],
-  //   allFolloweds: []
-  // }
+
   componentDidMount() {
     this.props.currentUser()
     this.props.fetchAllSongs()
     this.props.fetchAllUsers()
+    // TODO Currently fetching all comments on SongShowPage
+    // ? this.props.fetchAllComments()
   }
 
   setAllFollowings = () => {
@@ -65,8 +64,10 @@ class App extends React.Component {
 
   render() {
     // console.log('app props: ', this.props)
-    // console.log(this.state)
-    this.setAllFollowings()
+    // console.log('app state: ', this.state)
+    // this.setAllFollowings()
+    // TODO
+    // ? Need the 'isCurrentUser' 'isLoggedIn' to correct the paths
     return (
       <div className="app-container">
         {/* <Switch> */}
@@ -94,13 +95,13 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  // mapDispatchToProps
   {
     currentUser,
     logoutUser,
     fetchAllUsers,
     fetchAllSongs,
     setAllFolloweds,
-    setAllFollowers
+    setAllFollowers,
+    fetchAllComments
   }
 )(withRouter(App))

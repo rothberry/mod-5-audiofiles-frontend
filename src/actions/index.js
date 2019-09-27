@@ -19,6 +19,7 @@ export function logoutUser() {
   }
 }
 
+// ! Log's in user and issues token
 export function loginCurrentUser(formData, history) {
   return dispatch => {
     const reqObj = {
@@ -42,6 +43,7 @@ export function loginCurrentUser(formData, history) {
   }
 }
 
+// ! Finds the current user using token
 export function currentUser() {
   return dispatch => {
     const token = localStorage.token
@@ -64,6 +66,7 @@ export function currentUser() {
   }
 }
 
+// ! Sets all following relationships
 export function setAllFolloweds(followeds) {
   return {
     type: "SET_ALL_FOLLOWEDS",
@@ -78,6 +81,7 @@ export function setAllFollowers(followers) {
   }
 }
 
+// ! Creates a new User
 export function registerUser(formData, history) {
   return dispatch => {
     const reqObj = {
@@ -94,13 +98,18 @@ export function registerUser(formData, history) {
         } else {
           localStorage.token = data.jwt
           dispatch(loginUser(data.user))
-          history.push(`/profile/${data.user.id}`)
+          // TODO Will go to user profile page
+          // dispatch(setDisplayUser(data.user))
+          // history.push(`/profile/${data.user.id}`)
+          // ! Quick fix
+          history.push(`/feed`)
         }
       })
       .catch(err => console.log(err))
   }
 }
 
+// ! Get and Set all USERS
 export function setAllUsers(allUsers) {
   return {
     type: "SET_ALL_USERS",
@@ -109,7 +118,6 @@ export function setAllUsers(allUsers) {
 }
 
 export function fetchAllUsers() {
-  // TODO To fetch all the users from the database
   return dispatch => {
     return fetch(fetchUsersUrl)
       .then(resp => resp.json())
@@ -125,6 +133,7 @@ export function fetchAllUsers() {
   }
 }
 
+// ! Get and Set all SONGS
 export function setAllSongs(allSongs) {
   return {
     type: "SET_ALL_SONGS",
@@ -133,7 +142,6 @@ export function setAllSongs(allSongs) {
 }
 
 export function fetchAllSongs() {
-  // TODO To fetch all the songs from the database
   return dispatch => {
     return fetch(fetchSongsUrl)
       .then(resp => resp.json())
@@ -148,6 +156,7 @@ export function fetchAllSongs() {
   }
 }
 
+// ! Adds new song to allSongs Array
 export function addNewSongToFeed(newSong) {
   return {
     type: "ADD_SONG_TO_FEED",
@@ -155,8 +164,8 @@ export function addNewSongToFeed(newSong) {
   }
 }
 
+// ! POST New Song
 export function postNewSong(formData, user_id, history) {
-  // TODO Send POST fetch request to activestorage with attached audio file
   return dispatch => {
     console.log("post da new song bruh", formData)
     const { title, genre, description, song_link, selectedTags } = formData
@@ -180,8 +189,6 @@ export function postNewSong(formData, user_id, history) {
         if (data.error) {
           console.log("error: ", data.error)
         } else {
-          // TODO Redirect to the created song page
-          // console.log("success: ", data)
           dispatch(addNewSongToFeed(data))
           history.push(`/songs/${data.song.id}`)
         }
@@ -190,7 +197,7 @@ export function postNewSong(formData, user_id, history) {
   }
 }
 
-// ! Find Display User
+// ! Find and Set Display User
 export function setDisplayUser(displayUser) {
   return {
     type: "SET_DISPLAY_USER",
@@ -198,8 +205,6 @@ export function setDisplayUser(displayUser) {
   }
 }
 
-// ? Using the HISTORY path to get user-id
-// ? send id through finduser func and set the store of display user to the result
 export function findDisplayUser(allUsers, history) {
   return dispatch => {
     const displayUserID = Number(history.location.pathname.slice(9))
@@ -210,7 +215,7 @@ export function findDisplayUser(allUsers, history) {
   }
 }
 
-// ! Find Display Song
+// ! Find and Set Display Song
 export function setDisplaySong(displaySong) {
   return {
     type: "SET_DISPLAY_SONG",
@@ -219,7 +224,6 @@ export function setDisplaySong(displaySong) {
 }
 
 export function findDisplaySong(allSongs, history) {
-  console.log("finding da song")
   return dispatch => {
     const displaySongID = Number(history.location.pathname.slice(7))
     const displaySong = allSongs.find(song => {
@@ -230,28 +234,52 @@ export function findDisplaySong(allSongs, history) {
   }
 }
 
-// ! Add allTags
-
-// ! Show all display comments
-export function setDisplayComments(comments) {
+// ! Set All comments
+export function setAllComments(allComments) {
   return {
-    type: 'SET_DISPLAY_COMMENTS',
-    comments
+    type: "SET_ALL_COMMENTS",
+    allComments
+  }
+}
+
+// ! GET fetchs all Comments
+export function fetchAllComments() {
+  return dispatch => {
+    return fetch(fetchCommentsUrl)
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          console.log(data.error)
+        } else {
+          dispatch(setAllComments(data))
+        }
+      })
+      .catch(err => console.log(err))
   }
 }
 
 // ! GET All display Comments
-export function findDisplayComments(displaySong) {
+export function findDisplayComments(allComments, displaySong) {
   return dispatch => {
-    console.log('finding da comments: ', displaySong.song.comments)
-    dispatch(setDisplayComments(displaySong.song.comments))
+    const displayComments = allComments.filter(comment => {
+      return comment.song_id === displaySong.song.id
+    })
+    dispatch(setDisplayComments(displayComments))
+  }
+}
+
+// ! Set all display comments
+export function setDisplayComments(displayComments) {
+  return {
+    type: "SET_DISPLAY_COMMENTS",
+    displayComments
   }
 }
 
 // ! Add New Comment to displayComments Array in store
 export function addNewComment(comment) {
   return {
-    type: 'ADD_NEW_COMMENT',
+    type: "ADD_NEW_COMMENT",
     comment
   }
 }
@@ -259,7 +287,6 @@ export function addNewComment(comment) {
 // ! POST New Comment
 export function postNewComment(content, user_id, song_id) {
   return dispatch => {
-    // console.log('conttent: ', content, user_id, song_id)
     const reqObj = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -282,3 +309,7 @@ export function postNewComment(content, user_id, song_id) {
       .catch(err => console.log(err))
   }
 }
+
+// ! GET all Tags
+// ! SET all Tags
+// ? Some sort of filter songs by tag?

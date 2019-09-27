@@ -22,9 +22,12 @@ const store = createStore(reducer, persistedState, composeEnhancers(
 store.subscribe(throttle(()=>{
   saveState({
     allUsers: store.getState().allUsers,
-    allSongs: store.getState().allSongs
+    allSongs: store.getState().allSongs,
+    allComments: store.getState().allComments,
+    displaySong: store.getState().displaySong,
+    displayUser: store.getState().displayUser
   })
-}, 1000))
+}, 2000))
 
 
 ReactDOM.render(

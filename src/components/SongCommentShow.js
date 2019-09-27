@@ -3,43 +3,58 @@ import React, { Component } from "react"
 import { Segment, Button } from "semantic-ui-react"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
-import { findDisplayComments } from "../actions"
-import _ from 'lodash'
+import { findDisplayComments, fetchAllComments } from "../actions"
+import _ from "lodash"
 
 class SongCommentShow extends Component {
-
   componentDidMount() {
-    this.props.findDisplayComments(this.props.displaySong)
+    // TODO This works, but it sucks
+    this.commentGrabber()
   }
 
-  showTime = (ts) => {
+  commentGrabber = async () => {
+    await this.props.fetchAllComments()
+    this.props.findDisplayComments(
+      this.props.allComments,
+      this.props.displaySong
+    )
+  }
+
+  showTime = ts => {
     const date = ts.getDate()
     const month = ts.getMonth()
     const year = ts.getYear()
     const hours = ts.getHours()
-    const minutes = ts.getMinutes()
-    // const hours = ts.getHours()
-    const monthDateYear  = (month+1) + "/" + date + "/" + (year-100);
-    console.log(monthDateYear)
-    // const formattedDate = 
+    const minutes = "0" + ts.getMinutes()
+    const monthDateYear = month + 1 + "/" + date + "/" + (year - 100)
+    const hoursMinutes = hours + ":" + minutes.substr(-2)
+    const formattedTime = monthDateYear + "," + hoursMinutes
+    return formattedTime
   }
 
-  render() {
-    // console.log(this.props)
-    const mappedComments = this.props.displayComments.map(comment => {
+  mappedComments = () => {
+    return this.props.displayComments.map(comment => {
       let ts = new Date(comment.created_at)
-      this.showTime(ts)
-      
-      return(
-        <Segment piled raised size='tiny'>
-          <Button icon='delete' size='mini' onClick={null} />
-          {ts.toDateString()}: {comment.content}
+      return (
+        <Segment piled raised size="tiny" style={{
+          backgroundColor: '#0C0536', color: '#C0BDCA', overflow: 'auto'
+          }}>
+          <Button icon="delete" size="mini" onClick={null} />
+          <span style={{ fontWeight: "bold" }}>{comment.user.username}: </span>
+          {comment.content}{" "}
+          <span style={{ fontStyle: "italic" }}>{this.showTime(ts)}</span>
         </Segment>
       )
     })
+  }
+
+  render() {
+    // console.log(this.props.allComments)
     return (
       <Segment.Group>
-        {_.reverse(mappedComments)}  
+        {this.props.allComments.length > 0
+          ? _.reverse(this.mappedComments())
+          : "loading..."}
       </Segment.Group>
     )
   }
@@ -48,6 +63,7 @@ class SongCommentShow extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
+    allComments: state.allComments,
     displaySong: state.displaySong,
     displayComments: state.displayComments
   }
@@ -55,5 +71,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { findDisplayComments }
+  { findDisplayComments, fetchAllComments }
 )(withRouter(SongCommentShow))

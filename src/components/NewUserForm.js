@@ -30,7 +30,7 @@ class NewUserForm extends Component {
   }
 
   render() {
-    console.log(this.state)
+    // console.log(this.state)
     return (
       <div className="new-user-container">
         <Form className="new-user-form" onSubmit={this.handleCreateNewUser}>
@@ -103,14 +103,7 @@ class NewUserForm extends Component {
   }
 }
 
-const mapDisptachToProps = dispatch => {
-  return {
-    registerUser: (formData, history) =>
-      dispatch(registerUser(formData, history))
-  }
-}
-
 export default connect(
   null,
-  mapDisptachToProps
+  { registerUser }
 )(withRouter(NewUserForm))

@@ -7,7 +7,6 @@ import Waveform from "./Waveform"
 import { setDisplaySong } from "../actions"
 
 class SongFeedComponent extends Component {
-
   goToUserProfile = e => {
     const user_id = this.props.songData.song.user.id
     this.props.history.push(`/profile/${user_id}`)
@@ -16,20 +15,14 @@ class SongFeedComponent extends Component {
   goToSongPage = e => {
     const song_id = this.props.songData.song.id
     this.props.history.push(`/songs/${song_id}`)
+    // TODO Might not need to setdisplay song because also in SongShowPage render
     this.props.setDisplaySong(this.props.allSongs, this.props.history)
   }
 
   render() {
     const { songData } = this.props
-    const {
-      songData: { song }
-    } = this.props
-    const {
-      songData: {
-        song: { user }
-      }
-    } = this.props
-    // console.log(songData)
+    const { song } = songData
+    const { user } = song
     return (
       <div className={`song-comp-${song.id}`}>
         <Grid.Row columns={4}>
@@ -74,7 +67,6 @@ class SongFeedComponent extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
-    // allUsers: state.allUsers,
     allSongs: state.allSongs
   }
 }

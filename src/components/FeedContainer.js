@@ -2,20 +2,15 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
-import Waveform from "./Waveform"
 import SongFeedComponent from "./SongFeedComponent"
 import { Grid } from "semantic-ui-react"
-import _ from 'lodash'
+import _ from "lodash"
 
 class FeedContainer extends Component {
   render() {
     const { allSongs, followeds, followers } = this.props
-    const filteredWithSongLink = allSongs
-      .filter(song => song.song_link)
-      // .slice(0, 3)
-    // console.log('filter: ', filteredWithSongLink)
+    const filteredWithSongLink = allSongs.filter(song => song.song_link)
     const mappedFeed = filteredWithSongLink.map(songData => {
-      // console.log(songData)
       return (
         <div className={`waveform-${songData.id}`}>
           <SongFeedComponent songData={songData} />
@@ -28,14 +23,11 @@ class FeedContainer extends Component {
       <div className="feed-container">
         da Feed
         <Grid columns={2}>
-          <Grid.Column>
-            {_.reverse(mappedFeed)}
-          </Grid.Column>
+          <Grid.Column>{_.reverse(mappedFeed)}</Grid.Column>
           <Grid.Column>
             <h1>some crap on the right ride</h1>
           </Grid.Column>
         </Grid>
-        {/* <SongFeedComponent songData={allSongs[14]}/> */}
       </div>
     )
     // : (
@@ -56,6 +48,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  // null,
   null
 )(withRouter(FeedContainer))

@@ -62,14 +62,7 @@ class LoginForm extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    loginCurrentUser: (formData, history) =>
-      dispatch(loginCurrentUser(formData, history))
-  }
-}
-
 export default connect(
   null,
-  mapDispatchToProps
+  { loginCurrentUser }
 )(withRouter(LoginForm))

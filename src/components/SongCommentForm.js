@@ -2,7 +2,7 @@
 import React, { Component } from "react"
 import { Button, Form, Grid, Header, Message, Segment } from "semantic-ui-react"
 import { connect } from "react-redux"
-import { Link, withRouter } from "react-router-dom"
+import { withRouter } from "react-router-dom"
 import { postNewComment } from "../actions"
 
 class SongCommentForm extends Component {
@@ -32,8 +32,6 @@ class SongCommentForm extends Component {
           <Form.Group fluid >
             <Form.Input
               onChange={this.handleCommentInputChange}
-              // size="medium"
-              // widths='equal'
               placeholder="Leave A Comment"
               icon="comment"
               iconPosition="left"

@@ -10,7 +10,7 @@ import SongCommentShow from "./SongCommentShow"
 
 class SongShowPage extends Component {
   componentDidMount() {
-    console.log("cdm")
+    // console.log("cdm songsongspage", this.props)
     // this.props.findDisplaySong(this.props.allSongs, this.props.history)
   }
 
@@ -20,8 +20,8 @@ class SongShowPage extends Component {
 
   render() {
     // TODO need current song
+    // TODO Give User ability to see Split channels
     this.props.findDisplaySong(this.props.allSongs, this.props.history)
-    // console.log("in soong page: ", this.props.displaySong)
     const { song, song_link } = this.props.displaySong
     const isLoaded = !!this.props.displaySong.song
     const mappedTags = isLoaded
@@ -56,16 +56,16 @@ class SongShowPage extends Component {
           <Waveform
             song={song}
             song_link={song_link}
-            waveHeight={125}
+            waveHeight={250}
             responsive={true}
-            splitChannels={true}
+            splitChannels={false}
             mediaControls={true}
             maxCanvasWidth={500}
           />
         </Grid.Row>
+        <br />
         <Grid.Row>
           <Header size="medium">{song.description}</Header>
-          {/* <Header size="medium">Leave a comment:</Header> */}
           <SongCommentForm />
           <SongCommentShow />
         </Grid.Row>
@@ -79,6 +79,7 @@ class SongShowPage extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
+    allComments: state.allComments,
     displaySong: state.displaySong,
     allSongs: state.allSongs
   }
