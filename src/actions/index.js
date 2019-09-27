@@ -1,6 +1,8 @@
+/*eslint-disable */
 // ! All actions go in here
 const fetchUsersUrl = "http://localhost:3000/users"
 const fetchSongsUrl = "http://localhost:3000/songs"
+const fetchCommentsUrl = "http://localhost:3000/comments"
 
 export function loginUser(user) {
   console.log("login")
@@ -159,7 +161,6 @@ export function postNewSong(formData, user_id, history) {
     console.log("post da new song bruh", formData)
     const { title, genre, description, song_link, selectedTags } = formData
     let songData = new FormData()
-    // let songAudio = new FormData()
     songData.append("song[song_link]", song_link)
     songData.append("song[title]", title)
     songData.append("song[genre]", genre)
@@ -180,7 +181,7 @@ export function postNewSong(formData, user_id, history) {
           console.log("error: ", data.error)
         } else {
           // TODO Redirect to the created song page
-          console.log("success: ", data)
+          // console.log("success: ", data)
           dispatch(addNewSongToFeed(data))
           history.push(`/songs/${data.song.id}`)
         }
@@ -202,11 +203,9 @@ export function setDisplayUser(displayUser) {
 export function findDisplayUser(allUsers, history) {
   return dispatch => {
     const displayUserID = Number(history.location.pathname.slice(9))
-    console.log(displayUserID)
     const displayUser = allUsers.find(u => {
       return u.id === displayUserID
     })
-    console.log("displayUser: ", displayUser)
     dispatch(setDisplayUser(displayUser))
   }
 }
@@ -232,3 +231,54 @@ export function findDisplaySong(allSongs, history) {
 }
 
 // ! Add allTags
+
+// ! Show all display comments
+export function setDisplayComments(comments) {
+  return {
+    type: 'SET_DISPLAY_COMMENTS',
+    comments
+  }
+}
+
+// ! GET All display Comments
+export function findDisplayComments(displaySong) {
+  return dispatch => {
+    console.log('finding da comments: ', displaySong.song.comments)
+    dispatch(setDisplayComments(displaySong.song.comments))
+  }
+}
+
+// ! Add New Comment to displayComments Array in store
+export function addNewComment(comment) {
+  return {
+    type: 'ADD_NEW_COMMENT',
+    comment
+  }
+}
+
+// ! POST New Comment
+export function postNewComment(content, user_id, song_id) {
+  return dispatch => {
+    // console.log('conttent: ', content, user_id, song_id)
+    const reqObj = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        content,
+        user_id,
+        song_id
+      })
+    }
+    return fetch(fetchCommentsUrl, reqObj)
+      .then(resp => resp.json())
+      .then(data => {
+        if (data.error) {
+          console.log(data.error)
+        } else {
+          console.log(data)
+          dispatch(addNewComment(data))
+        }
+      })
+      .catch(err => console.log(err))
+  }
+}

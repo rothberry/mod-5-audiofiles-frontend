@@ -7,9 +7,11 @@ export default combineReducers({
   allSongs: allSongs,
   displayUser: displayUser,
   displaySong: displaySong,
+  displayComments: displayComments,
   followeds: followeds,
   followers: followers
 })
+
 
 function user(state = {}, action) {
   switch (action.type) {
@@ -79,6 +81,19 @@ function displaySong(state = {}, action) {
   switch (action.type) {
     case "SET_DISPLAY_SONG":
       return action.displaySong
+    default:
+      return state
+  }
+}
+
+function displayComments(state=[], action){
+  switch (action.type) {
+    case "SET_DISPLAY_COMMENTS":
+      return action.comments
+    case "ADD_NEW_COMMENT":
+      return [...state, action.comment]
+    // case "REMOVE_COMMENT":
+    //   return     
     default:
       return state
   }

@@ -1,24 +1,18 @@
 /*eslint-disable */
 import React, { Component } from "react"
 import Waveform from "./Waveform"
+import SongCommentForm from './SongCommentForm'
 import { withRouter } from "react-router-dom"
 import { connect } from "react-redux"
 import { Button, Grid, Header } from "semantic-ui-react"
 import { findDisplaySong } from "../actions"
+import SongCommentShow from "./SongCommentShow"
 
 class SongShowPage extends Component {
   componentDidMount() {
     console.log("cdm")
     // this.props.findDisplaySong(this.props.allSongs, this.props.history)
   }
-
-  // findSong = displaySongID => {
-  //   if (this.props.allSongs.length > 0) {
-  //     return this.props.allSongs.find(u => {
-  //       return u.song.id === displaySongID
-  //     })
-  //   }
-  // }
 
   goToUserProfile = (event, user_id) => {
     this.props.history.push(`/profile/${user_id}`)
@@ -27,13 +21,12 @@ class SongShowPage extends Component {
   render() {
     // TODO need current song
     this.props.findDisplaySong(this.props.allSongs, this.props.history)
-    console.log("in soong page: ", this.props.displaySong)
+    // console.log("in soong page: ", this.props.displaySong)
     const { song, song_link } = this.props.displaySong
     const isLoaded = !!this.props.displaySong.song
     const mappedTags = isLoaded
       ? song.tags.map(tag => <span> #{tag.name} </span>)
       : null
-    // const mappedTags = null
     return isLoaded ? (
       <div className={`song-show-${song.id}`}>
         <Grid.Row>
@@ -72,7 +65,9 @@ class SongShowPage extends Component {
         </Grid.Row>
         <Grid.Row>
           <Header size="medium">{song.description}</Header>
-          <Header size="medium">Comments:</Header>
+          {/* <Header size="medium">Leave a comment:</Header> */}
+          <SongCommentForm />
+          <SongCommentShow />
         </Grid.Row>
       </div>
     ) : (

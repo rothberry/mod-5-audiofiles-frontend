@@ -26,6 +26,7 @@ store.subscribe(throttle(()=>{
   })
 }, 1000))
 
+
 ReactDOM.render(
 <Provider store={store}>
   <Router>

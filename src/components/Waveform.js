@@ -19,21 +19,26 @@ class Waveform extends React.Component {
   }
   componentDidMount() {
     const { waveHeight, responsive, splitChannels, mediaControls, maxCanvasWidth, song } = this.props
-    // console.log(this.props.user)
-    let setIsFavorite = song.favorites.filter(fav => {
-      return fav.user_id === this.props.user.id
-    })
+    // let setIsFavorite
+    // if (!!Object.keys(this.props.user).length) {
+    //   setIsFavorite = this.props.song.favorites.find(fav => {
+    //     return fav.user_id === this.props.user.id
+    //   })
+    // }
+    // const setIsFavorite = this.setIsFavorite()
     // console.log(setIsFavorite)
+    // let randColor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+    let waveColor = '#0C0536'
+    let progressColor = '#C0BDCA'
     this.$el = ReactDOM.findDOMNode(this)
     this.$waveform = this.$el.querySelector(".wave")
     if (this.$waveform) {
       this.wavesurfer = WaveSurfer.create({
         container: this.$waveform,
         mediaType: "audio",
-        waveColor: "red",
-        progressColor: "blue",
+        waveColor: waveColor,
+        progressColor: progressColor,
         partialRender: true,
-        // barWidth: 1,
         height: waveHeight,
         maxCanvasWidth: maxCanvasWidth,
         splitChannels: splitChannels,
@@ -47,6 +52,7 @@ class Waveform extends React.Component {
       this.setState({
         favorites: this.props.song.favorites.length,
         duration: this.wavesurfer.getDuration()
+        // isFavorite: !!setIsFavorite
       })
     } else {
       console.log('waveform loading...')
@@ -69,6 +75,16 @@ class Waveform extends React.Component {
       return { isPlaying: false, pos: 0 }
     })
   }
+
+  // setIsFavorite = () => {
+  //   if (!!Object.keys(this.props.user).length) {
+  //     const setIsFavorite = this.props.song.favorites.find(fav => {
+  //       return fav.user_id === this.props.user.id
+  //     })
+  //   }
+  //   console.log(setIsFavorite)
+  //   return !!setIsFavorite
+  // }
 
   handleFavorite = (e) => {
     e.preventDefault()
@@ -99,8 +115,16 @@ class Waveform extends React.Component {
   render() {
     // return this.props.src ? (
     const buttonStyle = {width: '20%'}
-    // const favColor = this.state.isFavorite ?
-    // console.log(this.state)
+    let setIsFavorite
+    if (!!Object.keys(this.props.user).length) {
+      setIsFavorite = this.props.song.favorites.find(fav => {
+        return fav.user_id === this.props.user.id
+      })
+    }
+    // console.log(this.state.isFavorite)
+    const favColor = !!setIsFavorite ? 'red' : 'black'
+    // const favColor = !!this.state.isFavorite ? 'red' : 'black'
+    // TODO Make it so only one audio track can play at a time
     return (
       <div className="waveform" style={{cursor: 'text'}}>
         <div className="wave"></div>
@@ -112,7 +136,7 @@ class Waveform extends React.Component {
         {/* <Button name="stop" onClick={this.handleFavorite} icon='heart'> */}
         <Button as='div' toggle labelPosition='right' >
           <Button icon onClick={this.handleFavorite} circular >
-            <Icon name='heart' />
+            <Icon color={favColor} name='heart' />
           </Button>
           <Label basic pointing='left' circular >
             {this.state.favorites}

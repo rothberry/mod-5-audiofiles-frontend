@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom"
 import Waveform from "./Waveform"
 import SongFeedComponent from "./SongFeedComponent"
 import { Grid } from "semantic-ui-react"
+import _ from 'lodash'
 
 class FeedContainer extends Component {
   render() {
@@ -28,7 +29,7 @@ class FeedContainer extends Component {
         da Feed
         <Grid columns={2}>
           <Grid.Column>
-            {mappedFeed}
+            {_.reverse(mappedFeed)}
           </Grid.Column>
           <Grid.Column>
             <h1>some crap on the right ride</h1>
