@@ -11,17 +11,7 @@ class NewSongForm extends Component {
     genre: "",
     description: "",
     song_link: "",
-    selectedTags: [],
-    allTags: []
-  }
-  
-  componentDidMount() {
-    const fetchTagUrl = "http://localhost:3000/tags"
-    fetch(fetchTagUrl)
-      .then(res => res.json())
-      .then(data => {
-        this.setState({ allTags: data })
-      })
+    selectedTags: []
   }
 
   handleNewSongSubmit = e => {
@@ -44,21 +34,22 @@ class NewSongForm extends Component {
     this.setState({ song_link: targetSongLink, title: titleValue })
   }
 
+  tagOptions = (allTags) => {
+    return allTags.map(tag => {
+      return {
+        key: tag.name,
+        text: tag.name.split('_').join(' '),
+        value: tag.name
+      }
+    })
+  }
+
   goBackToProfile = () => {
     this.props.history(`/profile/${this.props.user.id}`)
   }
 
   render() {
-    // console.log(this.props)
-    const tagOptions = this.state.allTags
-      ? this.state.allTags.map(tag => {
-          return {
-            key: tag.name,
-            text: tag.name,
-            value: tag.name
-          }
-        })
-      : null
+    const tagOptions = this.tagOptions(this.props.allTags)
     // console.log(this.state)
     return (
       <div className="new-song-form">
@@ -120,7 +111,8 @@ class NewSongForm extends Component {
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    user: state.user,
+    allTags: state.allTags
   }
 }
 

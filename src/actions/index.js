@@ -3,6 +3,8 @@
 const fetchUsersUrl = "http://localhost:3000/users"
 const fetchSongsUrl = "http://localhost:3000/songs"
 const fetchCommentsUrl = "http://localhost:3000/comments"
+const fetchTagsUrl = "http://localhost:3000/tags"
+const fetchFollowingsUrl = "http://localhost:3000/followings"
 
 export function loginUser(user) {
   console.log("login")
@@ -31,10 +33,11 @@ export function loginCurrentUser(formData, history) {
       .then(resp => resp.json())
       .then(data => {
         if (data.error) {
-          console.log(data)
+          alert(data.error)
         } else {
           localStorage.token = data.jwt
           dispatch(loginUser(data.user))
+          dispatch(isCurrentUser(true))
           console.log(data)
           history.push(`/profile/${data.user.id}`)
         }
@@ -66,18 +69,10 @@ export function currentUser() {
   }
 }
 
-// ! Sets all following relationships
-export function setAllFolloweds(followeds) {
+export function addNewUser(newUser) {
   return {
-    type: "SET_ALL_FOLLOWEDS",
-    followeds
-  }
-}
-
-export function setAllFollowers(followers) {
-  return {
-    type: "SET_ALL_FOLLOWERS",
-    followers
+    type: "ADD_NEW_USER",
+    newUser
   }
 }
 
@@ -93,19 +88,57 @@ export function registerUser(formData, history) {
       .then(resp => resp.json())
       .then(data => {
         if (data.error) {
-          //handle Error
           console.log(data.error)
         } else {
           localStorage.token = data.jwt
           dispatch(loginUser(data.user))
-          // TODO Will go to user profile page
-          // dispatch(setDisplayUser(data.user))
-          // history.push(`/profile/${data.user.id}`)
+          dispatch(addNewUser(data.user))
+          dispatch(setDisplayUser(data.user))
+          history.push(`/profile/${data.user.id}`)
           // ! Quick fix
-          history.push(`/feed`)
+          // history.push(`/feed`)
         }
       })
       .catch(err => console.log(err))
+  }
+}
+
+export function updateUser(user) {
+  return {
+    type: "UPDATE_USER",
+    user
+  }
+}
+
+// ! Updates CurrentUser
+export function updateCurrentUser(user, formData, history) {
+  return dispatch => {
+    const token = localStorage.token
+    const fetchUpdateUserUrl = fetchUsersUrl + "/" + user.id
+    const reqUpdObj = {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+        Accepts: "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(formData)
+    }
+    console.log(formData)
+    const result = confirm("Are you sure you want to edit?")
+    if (result) {
+      return fetch(fetchUpdateUserUrl, reqUpdObj)
+        .then(res => res.json())
+        .then(user => {
+          console.log(user)
+          if (!user.error) {
+            dispatch(updateUser(user))
+            history.push(`/profile/${user.id}`)
+          } else {
+            alert("Invalid Shiz")
+          }
+        })
+    }
   }
 }
 
@@ -190,6 +223,7 @@ export function postNewSong(formData, user_id, history) {
           console.log("error: ", data.error)
         } else {
           dispatch(addNewSongToFeed(data))
+          dispatch(setDisplaySong(data))
           history.push(`/songs/${data.song.id}`)
         }
       })
@@ -208,6 +242,16 @@ export function setDisplayUser(displayUser) {
 export function findDisplayUser(allUsers, history) {
   return dispatch => {
     const displayUserID = Number(history.location.pathname.slice(9))
+    const displayUser = allUsers.find(u => {
+      return u.id === displayUserID
+    })
+    dispatch(setDisplayUser(displayUser))
+  }
+}
+
+export function findDisplayUserThroughSong(allUsers, displaySong) {
+  return dispatch => {
+    const displayUserID = Number(displaySong.song.user.id)
     const displayUser = allUsers.find(u => {
       return u.id === displayUserID
     })
@@ -310,6 +354,273 @@ export function postNewComment(content, user_id, song_id) {
   }
 }
 
-// ! GET all Tags
+export function deleteComment(comment_id) {
+  return {
+    type: "DELETE_COMMENT",
+    comment_id
+  }
+}
+
+// ! Delete Comment
+export function deleteCommentFromBackend(comment_id) {
+  return dispatch => {
+    const reqDelObj = {
+      method: "DELETE"
+    }
+    let result = confirm("Do you want to delete this comment?")
+    if (result) {
+      return fetch(`${fetchCommentsUrl}/${comment_id}`, reqDelObj)
+        .then(res => res.json())
+        .then(data => {
+          console.log(data)
+          if (data.error) {
+            // handle error
+          } else {
+            alert(data.message)
+            dispatch(deleteComment(comment_id))
+          }
+        })
+        .catch(err => console.log(err))
+    }
+  }
+}
+
 // ! SET all Tags
+export function setAllTags(allTags) {
+  return {
+    type: "SET_ALL_TAGS",
+    allTags
+  }
+}
+
+// ! GET all Tags
+export function fetchAllTags() {
+  return dispatch => {
+    return fetch(fetchTagsUrl)
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          console.log(data.error)
+        } else {
+          dispatch(setAllTags(data))
+        }
+      })
+      .catch(err => console.log(err))
+  }
+}
 // ? Some sort of filter songs by tag?
+
+// ! Goes to userProfile
+export function goToUserProfile(user_id, history) {
+  return dispatch => {
+    return history.push(`/profile/${user_id}`)
+  }
+}
+
+// ! Sets all passive relationships
+export function createFollowersArray(allUsers, currentUser) {
+  return dispatch => {
+    let followersIDArray = []
+    let followersArray = []
+    // console.log(allUsers, currentUser)
+    if (!!currentUser.passive_relationships) {
+      followersIDArray = currentUser.passive_relationships.map(
+        rel => rel.follower_id
+      )
+      followersArray = followersIDArray.map(followersID => {
+        return allUsers.find(user => {
+          return user.id === followersID
+        })
+      })
+      // console.log("followers: ", followersIDArray, followersArray)
+      dispatch(setAllFollowers(followersArray))
+    }
+  }
+}
+
+export function setAllFollowers(followers) {
+  return {
+    type: "SET_ALL_FOLLOWERS",
+    followers
+  }
+}
+
+// ! Sets all active relationships
+export function createFollowedsArray(allUsers, currentUser) {
+  return dispatch => {
+    let followedsIDArray = []
+    let followedsArray = []
+    if (!!currentUser.passive_relationships) {
+      followedsIDArray = currentUser.active_relationships.map(
+        rel => rel.followed_id
+      )
+      followedsArray = followedsIDArray.map(followedsID => {
+        return allUsers.find(user => {
+          return user.id === followedsID
+        })
+      })
+      // console.log("followed: ", followedsIDArray, followedsArray)
+      dispatch(setAllFolloweds(followedsArray))
+    }
+  }
+}
+
+// ! Sets all following relationships
+export function setAllFolloweds(followeds) {
+  return {
+    type: "SET_ALL_FOLLOWEDS",
+    followeds
+  }
+}
+
+// ! Add new relationship to array
+export function addFollowedUser() {}
+
+// ! Should update the followeds array in the store
+export function followUser(followed, follower_id) {
+  return dispatch => {
+    const token = localStorage.token
+    const reqPostObj = {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+        Accepts: "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        follower_id: follower_id,
+        followed_id: followed.id
+      })
+    }
+    return fetch(fetchFollowingsUrl, reqPostObj)
+      .then(res => res.json())
+      .then(data => {
+        console.log(data)
+        if (data.error) {
+          // console.log(data.error)
+        } else {
+          alert(`You've followed ${followed.username}`)
+          // dispatch(addFollowedUser(data))
+        }
+      })
+      .catch(err => console.log(err))
+  }
+}
+
+// ! Remove active relationship
+export function unfollowUser(relationship_id, displayUser) {
+  return dispatch => {
+    const token = localStorage.token
+    const reqDelObj = {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` }
+    }
+    let result = confirm(
+      `Are you sure you want to unfollow ${displayUser.username}?`
+    )
+    if (result) {
+      return fetch(`${fetchFollowingsUrl}/${relationship_id}`, reqDelObj)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.error) {
+            dispatch(removeFollowedUser())
+          }
+        })
+        .catch(err => console.log(err))
+    }
+  }
+}
+
+export function removeFollowedUser() {}
+
+export function currentRelationship(relationship) {
+  return {
+    type: "CURRENT_RELATIONSHIP",
+    relationship
+  }
+}
+
+export function isCurrentUser(isCurrentUser) {
+  return {
+    type: "IS_CURRENT_USER",
+    isCurrentUser
+  }
+}
+
+export function setCurrentUser(displayUser, user) {
+  return dispatch => {
+    const userCheck = displayUser.id === user.id
+    if (userCheck) {
+      dispatch(isCurrentUser(true))
+    } else {
+      dispatch(isCurrentUser(false))
+    }
+  }
+}
+
+// ! DELETE Song
+export function removeSong(song_id) {
+  return {
+    type: "REMOVE_SONG_FROM_FEED",
+    song_id
+  }
+}
+
+export function deleteSong(song_id, history) {
+  return dispatch => {
+    const reqDelObj = {
+      method: "DELETE"
+    }
+    let result = confirm("Do you want to delete this song?")
+    if (result) {
+      return fetch(`${fetchSongsUrl}/${song_id}`, reqDelObj)
+        .then(res => res.json())
+        .then(data => {
+          console.log(data)
+          if (data.error) {
+            // handle error
+          } else {
+            alert(data.message)
+            dispatch(removeSong(song_id))
+            history.push("/feed")
+          }
+        })
+        .catch(err => console.log(err))
+    }
+  }
+}
+
+// ! DELETE User
+export function removeUser(user_id) {
+  return {
+    type: "REMOVE_USER",
+    user_id
+  }
+}
+
+export function deleteUser(user_id, history) {
+  return dispatch => {
+    const token = localStorage.token
+    const reqDelObj = {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` }
+    }
+    let result = confirm("Are you sure you want to delete your account??")
+    if (result) {
+      return fetch(`${fetchUsersUrl}/${user_id}`, reqDelObj)
+        .then(res => res.json())
+        .then(data => {
+          console.log(data)
+          if (data.error) {
+            alert(data.error)
+          } else {
+            alert(data.message)
+            dispatch(removeUser(user_id))
+            dispatch(logoutUser())
+            history.push("/login")
+          }
+        })
+        .catch(err => console.log(err))
+    }
+  }
+}

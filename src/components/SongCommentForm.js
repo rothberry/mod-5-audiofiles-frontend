@@ -12,12 +12,14 @@ class SongCommentForm extends Component {
 
   handleCommentSubmit = e => {
     e.preventDefault()
-    this.props.postNewComment(
-      this.state.content,
-      this.props.user.id,
-      this.props.displaySong.song.id
-    )
-    this.setState({ content: "" })
+    if (!!this.state.content) {
+      this.props.postNewComment(
+        this.state.content,
+        this.props.user.id,
+        this.props.displaySong.song.id
+      )
+      this.setState({ content: "" })
+    }
   }
 
   handleCommentInputChange = e => {

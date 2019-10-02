@@ -56,6 +56,7 @@ class SongFeedComponent extends Component {
             splitChannels={false}
             mediaControls={true}
             maxCanvasWidth={500}
+            showCommentCount={false}
           />
         </Grid.Row>
         <br />

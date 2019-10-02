@@ -21,11 +21,12 @@ const store = createStore(reducer, persistedState, composeEnhancers(
 
 store.subscribe(throttle(()=>{
   saveState({
+    user: store.getState().user,
     allUsers: store.getState().allUsers,
     allSongs: store.getState().allSongs,
-    allComments: store.getState().allComments,
-    displaySong: store.getState().displaySong,
-    displayUser: store.getState().displayUser
+    allComments: store.getState().allComments
+    // displaySong: store.getState().displaySong,
+    // displayUser: store.getState().displayUser
   })
 }, 2000))
 

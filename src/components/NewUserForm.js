@@ -15,7 +15,7 @@ class NewUserForm extends Component {
     img_url: "",
     facebook_url: "",
     twitter_url: "",
-    soundclound_url: ""
+    soundcloud_url: ""
   }
 
   handleCreateNewUser = e => {
@@ -35,6 +35,8 @@ class NewUserForm extends Component {
       <div className="new-user-container">
         <Form className="new-user-form" onSubmit={this.handleCreateNewUser}>
           <Form.Field>
+            <Header as='h1'>Create Profile</Header>
+            <br />
             <Form.Input
               onChange={this.handleNewUserChange}
               placeholder="Name"
@@ -68,7 +70,7 @@ class NewUserForm extends Component {
             />
           </Form.Field>
           {/* TODO Add Socials & Images */}
-          {/* <Form.Field>
+          <Form.Field>
             <Form.Input
               onChange={this.handleNewUserChange}
               placeholder="Image Url"
@@ -93,7 +95,7 @@ class NewUserForm extends Component {
               type="text"
               name="soundcloud_url"
             />
-          </Form.Field> */}
+          </Form.Field>
           <Button type="submit" primary fluid size="large">
             SignUp!
           </Button>

@@ -6,14 +6,16 @@ import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
 import { Button, Icon, Label } from "semantic-ui-react"
 
+const fetchFavoritesURL = "http://localhost:3000/favorites"
+
 class Waveform extends React.Component {
-  
   state = {
     isPlaying: false,
-    favorites: 0,
-    isFavorite: false,
     pos: 0,
-    duration: 0
+    duration: 0,
+    favorites: [],
+    isFavorite: false,
+    favoriteID: ""
   }
 
   componentDidMount() {
@@ -23,16 +25,15 @@ class Waveform extends React.Component {
       splitChannels,
       mediaControls,
       maxCanvasWidth,
-      song_link
+      song_link,
+      song
     } = this.props
     // TODO Move waveColor and progress color to store
     // ? let randColor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
     let waveColor = "#0C0536"
     let progressColor = "#C0BDCA"
-    // let waveColor = "#C0BDCA"
-    // let progressColor = "#0C0536"
     this.$el = ReactDOM.findDOMNode(this)
-    this.$waveform = this.$el.querySelector(".wave")
+    this.$waveform = this.$el.querySelector(`.wave-${song.id}`)
     if (this.$waveform) {
       this.wavesurfer = WaveSurfer.create({
         container: this.$waveform,
@@ -48,36 +49,46 @@ class Waveform extends React.Component {
       })
       // this.$waveform.style.backgroundColor = "black"
       this.wavesurfer.load(song_link)
-      this.wavesurfer.setVolume(0.2)
+      this.wavesurfer.setVolume(1)
       // TODO Add duration to waveform
       this.setState({
-        favorites: this.props.song.favorites.length,
-        duration: this.wavesurfer.getDuration()
-        // isFavorite: !!setIsFavorite
+        favorites: song.favorites
+        // duration: this.wavesurfer.getDuration()
       })
     } else {
       console.log("waveform loading...")
     }
   }
 
-  // TODO Fix the 'isFavorite' for state
-  // setIsFavorite = () => {
-  //   if (!!Object.keys(this.props.user).length) {
-  //     const setIsFavorite = this.props.song.favorites.find(fav => {
-  //       return fav.user_id === this.props.user.id
-  //     })
-  //   }
-  //   console.log(setIsFavorite)
-  //   return !!setIsFavorite
-  // }
+  componentWillUnmount(){
+    this.wavesurfer.stop()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!!this.props.user.id && this.props.user.id !== prevProps.user.id) {
+      this.setIsFavorite(this.props.user.id)
+    }
+  }
+
+  setIsFavorite = user_id => {
+    const setIsFavorite = this.props.song.favorites.find(fav => {
+      return fav.user_id === user_id
+    })
+    if (setIsFavorite !== undefined) {
+      this.setState({
+        isFavorite: !!setIsFavorite,
+        favoriteID: setIsFavorite.id
+      })
+    }
+  }
 
   handleTogglePlay = () => {
     if (this.state.isPlaying) {
       this.wavesurfer.pause()
-      this.setState({ isPlaying: !this.state.isPlaying })
+      this.setState({ isPlaying: !this.state.isPlaying, pos: this.wavesurfer.getCurrentTime() })
     } else {
       this.wavesurfer.play()
-      this.setState({ isPlaying: !this.state.isPlaying })
+      this.setState({ isPlaying: !this.state.isPlaying, pos: this.wavesurfer.getCurrentTime() })
     }
   }
 
@@ -90,48 +101,63 @@ class Waveform extends React.Component {
 
   handleFavorite = e => {
     e.preventDefault()
-    const fetchFavoritesURL = "http://localhost:3000/favorites"
-    const reqObj = {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify({
-        user_id: this.props.user.id,
-        song_id: this.props.song.id
-      })
+    if (!this.state.isFavorite) {
+      const reqPostObj = {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          user_id: this.props.user.id,
+          song_id: this.props.song.id
+        })
+      }
+      fetch(fetchFavoritesURL, reqPostObj)
+        .then(resp => resp.json())
+        .then(data => {
+          if (!data.errors) {
+            this.setState({
+              favorites: [...this.state.favorites, data],
+              isFavorite: true,
+              favoriteID: data.id
+            })
+          } 
+          else {
+            this.setState({isFavorite: true})
+          }
+        })
+        .catch(err => console.log(err))
+    } else {
+      this.handleUnfavorite()
     }
-    fetch(fetchFavoritesURL, reqObj)
-      .then(resp => resp.json())
+  }
+
+  handleUnfavorite = () => {
+    const reqDelObj = {
+      method: "DELETE"
+    }
+    fetch(`${fetchFavoritesURL}/${this.state.favoriteID}`, reqDelObj)
+      .then(res => res.json())
       .then(data => {
-        console.log(data)
         if (!data.errors) {
+          let newFavArray = this.state.favorites.filter(fav => fav.id !== this.state.favoriteID)
           this.setState({
-            favorites: this.state.favorites + 1,
-            isFavorite: !this.state.isFavorite
+            favorites: newFavArray,
+            isFavorite: false
           })
+        } else {
+          this.setState({isFavorite: false})
         }
       })
       .catch(err => console.log(err))
   }
 
-  handleUnfavorite = () => {
-    // TODO can unfavorite with a DELETE request
-  }
-
   render() {
     // TODO Make it so only one audio track can play at a time
+    // console.log('wave: ', this.state)
     const buttonStyle = { width: "20%" }
-    let setIsFavorite
-    if (!!Object.keys(this.props.user).length) {
-      setIsFavorite = this.props.song.favorites.find(fav => {
-        return fav.user_id === this.props.user.id
-      })
-    }
-    // console.log(this.state.isFavorite)
-    const favColor = !!setIsFavorite ? "red" : "black"
-    // const favColor = !!this.state.isFavorite ? 'red' : 'black'
+    const favColor = this.state.isFavorite ? "red" : "black"
     return (
       <div className="waveform" style={{ cursor: "text" }}>
-        <div className="wave"></div>
+        <div className={`wave-${this.props.song.id}`}></div>
         {!this.state.isPlaying ? (
           <Button
             name="play-pause"
@@ -156,17 +182,22 @@ class Waveform extends React.Component {
           circular
           icon="stop"
         />
-        {/* <Button name="stop" onClick={this.handleFavorite} icon='heart'> */}
         <Button as="div" toggle labelPosition="right">
           <Button icon onClick={this.handleFavorite} circular>
             <Icon color={favColor} name="heart" />
           </Button>
+          {/* <Button icon onClick={this.handleUnfavorite} circular /> */}
           <Label basic pointing="left" circular>
-            {this.state.favorites}
+            {this.state.favorites.length}
           </Label>
         </Button>
-        <Label>{this.state.duration}</Label>
-        {/* </Button> */}
+        {/* <Label>{this.state.duration}</Label> */}
+        {this.props.showCommentCount ? (
+          <Label icon="comments" iconPosition="left">
+            {" "}
+            {this.props.song.comments.length}
+          </Label>
+        ) : null}
       </div>
     )
   }
