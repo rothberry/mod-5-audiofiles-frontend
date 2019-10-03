@@ -38,9 +38,13 @@ class SongShowPage extends Component {
     const mappedTags = isLoaded
       ? song.tags.map(tag => <span> #{tag.name} </span>)
       : null
+    const { isLoggedIn } = this.props.user
+
+    const waveformStyle = { maxHeight: "50vh" }
+    // const waveformStyle = { height: "40%" }
     return isLoaded ? (
       <div className={`song-show-${song.id}`}>
-        <Segment style={{ overflow: "auto", height: 400 }}>
+        <Segment style={waveformStyle}>
           <Grid.Row>
             <Grid.Column>
               <Header size="huge">{song.title}</Header>
@@ -68,7 +72,9 @@ class SongShowPage extends Component {
                 <Button
                   icon="delete"
                   // floated='right'
-                  onClick={(song_id, history) => this.props.deleteSong(song.id, this.props.history)}
+                  onClick={(song_id, history) =>
+                    this.props.deleteSong(song.id, this.props.history)
+                  }
                 />
               ) : null}
             </Grid.Column>
@@ -85,12 +91,11 @@ class SongShowPage extends Component {
             />
           </Grid.Row>
         </Segment>
-        <br />
-        <Grid.Row>
-          <Header size="medium">{song.description}</Header>
-          <SongCommentForm />
+        <Segment style={{margin: '0 20%'}}>
+          <Header size="medium" style={{margin: '0 1%'}}>{song.description}</Header>
+          {isLoggedIn ? <SongCommentForm /> : null}
           <SongCommentShow />
-        </Grid.Row>
+        </Segment>
       </div>
     ) : (
       <div>loading......</div>

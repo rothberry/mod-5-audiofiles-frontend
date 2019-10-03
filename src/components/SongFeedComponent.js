@@ -7,6 +7,9 @@ import Waveform from "./Waveform"
 import { setDisplaySong } from "../actions"
 
 class SongFeedComponent extends Component {
+  state = {
+    filtered: this.props.filtered
+  }
   goToUserProfile = e => {
     const user_id = this.props.songData.song.user.id
     this.props.history.push(`/profile/${user_id}`)
@@ -49,6 +52,7 @@ class SongFeedComponent extends Component {
         </Grid.Row>
         <Grid.Row>
           <Waveform
+          filtered = {this.props.filtered}
             song={song}
             song_link={songData.song_link}
             waveHeight={100}

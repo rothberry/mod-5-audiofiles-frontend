@@ -69,6 +69,9 @@ function allSongs(state = [], action) {
     case "REMOVE_SONG_FROM_FEED":
       const newSongArray = state.filter(so => so.song.id !== action.song_id)
       return newSongArray
+    case "REMOVE_SONGS_FROM_DELETED_USER":
+      const newSongArrayFromUser = state.filter(so => so.song.user_id !== action.user_id)
+      return newSongArrayFromUser
     default:
       return state
   }
@@ -96,7 +99,7 @@ function displayUser(state = {}, action) {
   switch (action.type) {
     case "SET_DISPLAY_USER":
       return action.displayUser
-    case 'LOGOUT_USER':
+    case "REMOVE_DISPLAY_USER":
       return {}
     default:
       return state
@@ -107,6 +110,8 @@ function displaySong(state = {}, action) {
   switch (action.type) {
     case "SET_DISPLAY_SONG":
       return action.displaySong
+    case "REMOVE_DISPLAY_SONG":
+      return {}
     default:
       return state
   }

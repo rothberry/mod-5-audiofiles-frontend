@@ -4,13 +4,15 @@ import ReactDOM from "react-dom"
 import WaveSurfer from "wavesurfer.js"
 import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
-import { Button, Icon, Label } from "semantic-ui-react"
+import { Button, Icon, Label, Segment, Loader } from "semantic-ui-react"
 
 const fetchFavoritesURL = "http://localhost:3000/favorites"
 
 class Waveform extends React.Component {
+  // TODO Add Loading animation on Waveform
   state = {
     isPlaying: false,
+    // isLoading: true,
     pos: 0,
     duration: 0,
     favorites: [],
@@ -19,6 +21,11 @@ class Waveform extends React.Component {
   }
 
   componentDidMount() {
+    this.buildWaveForm()
+    this.setIsFavorite(this.props.song.user.id)
+  }
+
+  buildWaveForm = () => {
     const {
       waveHeight,
       responsive,
@@ -29,7 +36,8 @@ class Waveform extends React.Component {
       song
     } = this.props
     // TODO Move waveColor and progress color to store
-    // ? let randColor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+    let randWaveColor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+    let randProgColor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
     let waveColor = "#0C0536"
     let progressColor = "#C0BDCA"
     this.$el = ReactDOM.findDOMNode(this)
@@ -38,8 +46,8 @@ class Waveform extends React.Component {
       this.wavesurfer = WaveSurfer.create({
         container: this.$waveform,
         mediaType: "audio",
-        waveColor: waveColor,
-        progressColor: progressColor,
+        waveColor: randWaveColor,
+        progressColor: randProgColor,
         partialRender: true,
         height: waveHeight,
         maxCanvasWidth: maxCanvasWidth,
@@ -47,24 +55,28 @@ class Waveform extends React.Component {
         mediaControls: mediaControls,
         responsive: responsive
       })
+
       // this.$waveform.style.backgroundColor = "black"
       this.wavesurfer.load(song_link)
+      // this.setState({ isLoading: false })
       this.wavesurfer.setVolume(1)
       // TODO Add duration to waveform
-      this.setState({
-        favorites: song.favorites
-        // duration: this.wavesurfer.getDuration()
-      })
     } else {
       console.log("waveform loading...")
     }
   }
 
-  componentWillUnmount(){
-    this.wavesurfer.stop()
+  componentWillUnmount() {
+    this.wavesurfer.empty()
   }
 
   componentDidUpdate(prevProps) {
+    if (prevProps.filtered !== this.props.filtered) {
+      this.wavesurfer.empty()
+      this.wavesurfer.load(this.props.song_link)
+      // this.$waveform.firstChild.remove()
+      // this.buildWaveForm()
+    }
     if (!!this.props.user.id && this.props.user.id !== prevProps.user.id) {
       this.setIsFavorite(this.props.user.id)
     }
@@ -76,6 +88,7 @@ class Waveform extends React.Component {
     })
     if (setIsFavorite !== undefined) {
       this.setState({
+        favorites: this.props.song.favorites,
         isFavorite: !!setIsFavorite,
         favoriteID: setIsFavorite.id
       })
@@ -85,10 +98,16 @@ class Waveform extends React.Component {
   handleTogglePlay = () => {
     if (this.state.isPlaying) {
       this.wavesurfer.pause()
-      this.setState({ isPlaying: !this.state.isPlaying, pos: this.wavesurfer.getCurrentTime() })
+      this.setState({
+        isPlaying: !this.state.isPlaying,
+        pos: this.wavesurfer.getCurrentTime()
+      })
     } else {
       this.wavesurfer.play()
-      this.setState({ isPlaying: !this.state.isPlaying, pos: this.wavesurfer.getCurrentTime() })
+      this.setState({
+        isPlaying: !this.state.isPlaying,
+        pos: this.wavesurfer.getCurrentTime()
+      })
     }
   }
 
@@ -113,15 +132,13 @@ class Waveform extends React.Component {
       fetch(fetchFavoritesURL, reqPostObj)
         .then(resp => resp.json())
         .then(data => {
+          console.log(data)
           if (!data.errors) {
             this.setState({
               favorites: [...this.state.favorites, data],
               isFavorite: true,
               favoriteID: data.id
             })
-          } 
-          else {
-            this.setState({isFavorite: true})
           }
         })
         .catch(err => console.log(err))
@@ -138,13 +155,13 @@ class Waveform extends React.Component {
       .then(res => res.json())
       .then(data => {
         if (!data.errors) {
-          let newFavArray = this.state.favorites.filter(fav => fav.id !== this.state.favoriteID)
+          let newFavArray = this.state.favorites.filter(
+            fav => fav.id !== this.state.favoriteID
+          )
           this.setState({
             favorites: newFavArray,
             isFavorite: false
           })
-        } else {
-          this.setState({isFavorite: false})
         }
       })
       .catch(err => console.log(err))
@@ -152,11 +169,13 @@ class Waveform extends React.Component {
 
   render() {
     // TODO Make it so only one audio track can play at a time
-    // console.log('wave: ', this.state)
+    const { isLoading } = this.state
+    const { isLoggedIn } = this.props.user
     const buttonStyle = { width: "20%" }
+    const waveStyle = { backgroundColor: 'aluminum' }
     const favColor = this.state.isFavorite ? "red" : "black"
     return (
-      <div className="waveform" style={{ cursor: "text" }}>
+      <Segment className="waveform" style={{ cursor: "text" }} raised style={waveStyle} >
         <div className={`wave-${this.props.song.id}`}></div>
         {!this.state.isPlaying ? (
           <Button
@@ -182,23 +201,21 @@ class Waveform extends React.Component {
           circular
           icon="stop"
         />
-        <Button as="div" toggle labelPosition="right">
+        <Button as="div" toggle labelPosition="right" disabled={!isLoggedIn}>
           <Button icon onClick={this.handleFavorite} circular>
             <Icon color={favColor} name="heart" />
           </Button>
-          {/* <Button icon onClick={this.handleUnfavorite} circular /> */}
           <Label basic pointing="left" circular>
             {this.state.favorites.length}
           </Label>
         </Button>
-        {/* <Label>{this.state.duration}</Label> */}
         {this.props.showCommentCount ? (
           <Label icon="comments" iconPosition="left">
             {" "}
             {this.props.song.comments.length}
           </Label>
         ) : null}
-      </div>
+      </Segment>
     )
   }
 }

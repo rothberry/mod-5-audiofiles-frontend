@@ -22,11 +22,12 @@ class LoginForm extends Component {
   }
 
   render() {
+    const loginStyle = {margin: '30%'}
     return (
       <div className="login-form">
-        <Grid textAlign="center" verticalAlign="middle">
+        <Grid textAlign="center" verticalAlign="middle" style={loginStyle}>
           <Grid.Column>
-            <Form size="large" onSubmit={this.handleLoginSubmit}>
+            <Form size="medium" onSubmit={this.handleLoginSubmit}>
               <Segment stacked>
                 <Header as="h1">Login</Header>
                 <Form.Input

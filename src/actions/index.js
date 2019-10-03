@@ -245,7 +245,9 @@ export function findDisplayUser(allUsers, history) {
     const displayUser = allUsers.find(u => {
       return u.id === displayUserID
     })
-    dispatch(setDisplayUser(displayUser))
+    if (!!displayUser) {
+      dispatch(setDisplayUser(displayUser))
+    }
   }
 }
 
@@ -274,7 +276,9 @@ export function findDisplaySong(allSongs, history) {
       return song.song.id === displaySongID
     })
     // console.log("displaySong: ", displaySong)
-    dispatch(setDisplaySong(displaySong))
+    if (!!displaySong) {
+      dispatch(setDisplaySong(displaySong))
+    }
   }
 }
 
@@ -582,7 +586,7 @@ export function deleteSong(song_id, history) {
           } else {
             alert(data.message)
             dispatch(removeSong(song_id))
-            history.push("/feed")
+            history.push("/")
           }
         })
         .catch(err => console.log(err))
@@ -616,11 +620,32 @@ export function deleteUser(user_id, history) {
           } else {
             alert(data.message)
             dispatch(removeUser(user_id))
+            dispatch(removeSongsFromFeed(user_id))
             dispatch(logoutUser())
+            dispatch(removeDisplayUser())
+            dispatch(removeDisplaySong())
             history.push("/login")
           }
         })
         .catch(err => console.log(err))
     }
+  }
+}
+
+export function removeDisplayUser() {
+  return {
+    type: "REMOVE_DISPLAY_USER"
+  }
+}
+export function removeDisplaySong() {
+  return {
+    type: "REMOVE_DISPLAY_SONG"
+  }
+}
+
+export function removeSongsFromFeed(user_id) {
+  return {
+    type: "REMOVE_SONGS_FROM_DELETED_USER",
+    user_id
   }
 }

@@ -43,7 +43,7 @@ class SongCommentShow extends Component {
       let ts = new Date(comment.created_at)
       const isCurrentUser = this.props.user.id === comment.user.id
       return (
-        <Segment size="tiny" style={commentStyle}>
+        <Segment as='ol' size="tiny" style={commentStyle}>
           {isCurrentUser ? (
             <Button
               icon="delete"
@@ -77,7 +77,7 @@ class SongCommentShow extends Component {
   }
 
   render() {
-    const commentStyleBox = { overflow: "auto", maxHeight: 300 }
+    const commentStyleBox = { overflow: "auto", maxHeight: '30vh', margin: '0% 1%' }
     // console.log(this.props.allComments)
     return (
       <Segment.Group raised style={commentStyleBox}>

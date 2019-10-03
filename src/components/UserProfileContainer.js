@@ -2,9 +2,9 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
-import { Button, Grid, Modal } from "semantic-ui-react"
+import { Button, Grid, Modal, Loader } from "semantic-ui-react"
 import SongFeedComponent from "./SongFeedComponent"
-import UserProfileSIde from "./UserProfileSIde"
+import UserProfileSide from "./UserProfileSide"
 import {
   findDisplayUser,
   followUser,
@@ -25,8 +25,8 @@ class UserProfileContainer extends Component {
     await this.props.currentUser()
     await this.props.findDisplayUser(this.props.allUsers, this.props.history)
     await this.props.setCurrentUser(this.props.displayUser, this.props.user)
-    await this.props.createFollowersArray(this.props.allUsers, this.props.user)
-    await this.props.createFollowedsArray(this.props.allUsers, this.props.user)
+    await this.props.createFollowersArray(this.props.allUsers, this.props.displayUser)
+    await this.props.createFollowedsArray(this.props.allUsers, this.props.displayUser)
     if (!!this.props.displayUser.passive_relationships) {
       const relationship = this.props.displayUser.passive_relationships.find(
         rel => {
@@ -36,6 +36,12 @@ class UserProfileContainer extends Component {
       this.props.currentRelationship(relationship)
     }
   }
+
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.displayUser !== this.props.displayUser) {
+  //     this.asyncUserProfileProps()
+  //   }
+  // }
 
   render() {
     const { isCurrentUser } = this.props.user
@@ -50,13 +56,14 @@ class UserProfileContainer extends Component {
         )
       }
     )
+    const profileStyle = {margin: '2%'}
     return !!this.props.displayUser.id ? (
-      <Grid className={`user-profile-${id}`} columns={2}>
-        <Grid.Column>{mappedDisplayUserSongFeed}</Grid.Column>
-        <UserProfileSIde />
+      <Grid className={`user-profile-${id}`} columns={3} style={profileStyle}>
+        <Grid.Column width='10'>{mappedDisplayUserSongFeed}</Grid.Column>
+        <UserProfileSide />
       </Grid>
     ) : (
-      <div>No User Profile</div>
+      <Loader>Loadings User profile</Loader>
     )
   }
 }

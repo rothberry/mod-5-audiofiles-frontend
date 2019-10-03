@@ -46,9 +46,9 @@ class Nav extends Component {
 
     return (
       <Sticky className="nav-bar-container">
-        {isLoggedIn ? (
+        {!!isLoggedIn ? (
           <Button.Group floated='left'>
-            <Button as={Link} to="/feed" icon='music' label="Feed" />
+            <Button as={Link} to="/" icon='music' label="Feed" />
             <Button
               as={Link}
               onClick={user_id =>
@@ -63,7 +63,7 @@ class Nav extends Component {
           </Button.Group>
         ) : (
           <Button.Group>
-            <Button as={Link} to="/feed" icon='music' label="Feed" />
+            <Button as={Link} to="/" icon='music' label="Feed" />
             <Button as={Link} to="/login" icon='sign-in' label="Login" />
           </Button.Group>
         )}

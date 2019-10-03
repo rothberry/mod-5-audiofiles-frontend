@@ -23,37 +23,42 @@ import {
 } from "../actions"
 
 class App extends React.Component {
-
   componentDidMount() {
     this.asyncFetches()
   }
-  
+
   asyncFetches = async () => {
     await this.props.currentUser()
     await this.props.fetchAllUsers()
     await this.props.fetchAllSongs()
     await this.props.fetchAllComments()
-    await this.props.fetchAllTags()
+    this.props.fetchAllTags()
     // const { allUsers, user } = this.props
     // this.props.createFollowersArray(allUsers, user)
     // this.props.createFollowedsArray(allUsers, user)
   }
 
   render() {
-    // ? Need the 'isCurrentUser' 'isLoggedIn' to correct the paths
+    const { isLoggedIn } = this.props.user
     return (
       <div className="app-container">
-        {/* <Switch> */}
         <Nav />
         <br /> <br />
-        <Route path="/login" render={() => <LoginForm />} />
-        <Route path="/createaccount" render={() => <NewUserForm />} />
-        <Route path="/profile/:id" render={() => <UserProfileContainer />} />
-        <Route path="/feed" render={() => <FeedContainer />} />
-        <Route path="/newsong" render={() => <NewSongForm />} />
-        <Route path="/songs/:id" render={() => <SongShowPage />} />
-        <Route path="/editaccount" render={() => <EditUserForm />} />
-        {/* </Switch> */}
+        <Route exact path="/" component={FeedContainer} />
+        <Switch>
+          <Route exact path="/login">
+            {!!isLoggedIn ? <Redirect push to="/" /> : <LoginForm />}
+          </Route>
+          <Route exact path="/createaccount">
+            {!!isLoggedIn ? <Redirect push to="/" /> : <NewUserForm />}
+          </Route>
+          <Route path="/profile/:id" component={UserProfileContainer} />
+          <Route path="/songs/:id" component={SongShowPage} />
+          <Route exact path="/newsong">
+            {!!isLoggedIn ? <NewSongForm /> : <Redirect push to="/login" />}
+          </Route>
+        </Switch>
+        {/* <Route path="/editaccount" render={() => <EditUserForm />} /> */}
       </div>
     )
   }

@@ -16,8 +16,14 @@ class NewSongForm extends Component {
 
   handleNewSongSubmit = e => {
     e.preventDefault()
-    const user_id = this.props.user.id
-    this.props.postNewSong(this.state, user_id, this.props.history)
+    const {title, genre, description, song_link} = this.state
+    const isRealSong = !!title && !!genre && !!description && !!song_link 
+    if (isRealSong) {
+      const user_id = this.props.user.id
+      this.props.postNewSong(this.state, user_id, this.props.history)
+    } else {
+      alert("Cannot submit song with blank entries")
+    }
   }
 
   handleNewSongChange = e => {
@@ -51,17 +57,19 @@ class NewSongForm extends Component {
   render() {
     const tagOptions = this.tagOptions(this.props.allTags)
     // console.log(this.state)
+    const songFormStyle = {margin: '10%'}
     return (
       <div className="new-song-form">
-        <Grid textAlign="center" verticalAlign="middle">
+        <Grid textAlign="center" verticalAlign="middle" style={songFormStyle}>
           <Grid.Column>
             <Form
-              size="large"
+              size="medium"
               onSubmit={this.handleNewSongSubmit}
               encType="multipart/form-data"
             >
               <Segment stacked>
-                <Header as="h1">New Song</Header>
+                <Header as="h1">Submit a new Track!</Header>
+                <Header as="h4">Please fill out entire form.</Header>
                 <Form.Input
                   onChange={this.handleNewSongChange}
                   placeholder="Title"
