@@ -1,9 +1,11 @@
 /*eslint-disable */
 import React, { Component } from "react"
-import { Button, Form, Header, Segment } from "semantic-ui-react"
+import { Button, Form, Header, Segment, Image } from "semantic-ui-react"
 import { connect } from "react-redux"
 import { registerUser } from "../actions"
 import { withRouter } from "react-router-dom"
+const audioWaveImg =
+  "https://library.kissclipart.com/20180919/pww/kissclipart-sound-wave-vector-clipart-sound-wave-79091298684b3993.png"
 
 class NewUserForm extends Component {
   state = {
@@ -31,13 +33,16 @@ class NewUserForm extends Component {
 
   render() {
     // console.log(this.state)
-    const newUserStyle = { margin: "15%" }
+    const newUserStyle = { margin: "5% 30%" }
     return (
       <div className="new-user-container">
         <Segment size="medium" style={newUserStyle}>
           <Form className="new-user-form" onSubmit={this.handleCreateNewUser}>
             <Form.Field>
-              <Header as="h1">Create Profile</Header>
+              <Header as="h1">
+                <Image src={audioWaveImg} size='large'/>
+                Create Your Profile!
+              </Header>
               <br />
               <Form.Input
                 onChange={this.handleNewUserChange}
@@ -81,24 +86,24 @@ class NewUserForm extends Component {
               />
               <Form.Input
                 onChange={this.handleNewUserChange}
-                placeholder="Facebook"
+                placeholder="Facebook Url"
                 type="text"
                 name="facebook_url"
               />
               <Form.Input
                 onChange={this.handleNewUserChange}
-                placeholder="Twitter"
+                placeholder="Twitter Url"
                 type="text"
                 name="twitter_url"
               />
               <Form.Input
                 onChange={this.handleNewUserChange}
-                placeholder="SoundCloud"
+                placeholder="SoundCloud Url"
                 type="text"
                 name="soundcloud_url"
               />
             </Form.Field>
-            <Button type="submit" primary fluid size="large">
+            <Button type="submit" primary fluid  size="large">
               SignUp!
             </Button>
           </Form>

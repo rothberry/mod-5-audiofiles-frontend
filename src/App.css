@@ -32,11 +32,19 @@ body {
   left: 0%;
   right: auto;
   bottom: auto;
-  
   z-index: 101;
   background: #282c34;
-  /* margin-bottom: 500px; */
-  /* padding-bottom: 200px; */
   width: 100%;
   position: fixed;
 }
+
+/* .feed-profile-side {
+  top: 4%;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  /* z-index: 101; */
+  /* background: #282c34; */
+  /* width: 100%; */
+  /* position: fixed; */
+/* } */

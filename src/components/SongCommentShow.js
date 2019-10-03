@@ -43,12 +43,12 @@ class SongCommentShow extends Component {
       let ts = new Date(comment.created_at)
       const isCurrentUser = this.props.user.id === comment.user.id
       return (
-        <Segment as='ol' size="tiny" style={commentStyle}>
+        <Segment as="ol" size="tiny">
           {isCurrentUser ? (
             <Button
               icon="delete"
               size="mini"
-              onClick={(comment_id) =>
+              onClick={comment_id =>
                 this.props.deleteCommentFromBackend(comment.id)
               }
             />
@@ -62,22 +62,26 @@ class SongCommentShow extends Component {
             />
           )}
           <span
-            style={{ fontWeight: "bold", cursor: 'pointer' }}
+            style={{ fontStyle: "italic", cursor: "pointer", paddingRight: "1%" }}
             onClick={(user_id, history) =>
               this.props.goToUserProfile(comment.user.id, this.props.history)
             }
           >
             {comment.user.username}:{" "}
           </span>
-          {comment.content}{" "}
-          <span style={{ fontStyle: "italic" }}>{this.showTime(ts)}</span>
+          <span style={{fontWeight: 'bold', paddingRight: '1%'}}>{comment.content} </span>
+          <span style={{ fontStyle: "italic", float: 'right' }}>{this.showTime(ts)}</span>
         </Segment>
       )
     })
   }
 
   render() {
-    const commentStyleBox = { overflow: "auto", maxHeight: '30vh', margin: '0% 1%' }
+    const commentStyleBox = {
+      overflow: "auto",
+      maxHeight: "30vh",
+      margin: "0% 1%"
+    }
     // console.log(this.props.allComments)
     return (
       <Segment.Group raised style={commentStyleBox}>

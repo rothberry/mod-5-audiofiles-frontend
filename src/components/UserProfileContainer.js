@@ -2,7 +2,7 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
-import { Button, Grid, Modal, Loader } from "semantic-ui-react"
+import { Button, Grid, Modal, Loader, Header } from "semantic-ui-react"
 import SongFeedComponent from "./SongFeedComponent"
 import UserProfileSide from "./UserProfileSide"
 import {
@@ -15,6 +15,7 @@ import {
   createFollowersArray,
   createFollowedsArray
 } from "../actions"
+import _ from 'lodash'
 
 class UserProfileContainer extends Component {
   componentDidMount() {
@@ -25,8 +26,14 @@ class UserProfileContainer extends Component {
     await this.props.currentUser()
     await this.props.findDisplayUser(this.props.allUsers, this.props.history)
     await this.props.setCurrentUser(this.props.displayUser, this.props.user)
-    await this.props.createFollowersArray(this.props.allUsers, this.props.displayUser)
-    await this.props.createFollowedsArray(this.props.allUsers, this.props.displayUser)
+    await this.props.createFollowersArray(
+      this.props.allUsers,
+      this.props.displayUser
+    )
+    await this.props.createFollowedsArray(
+      this.props.allUsers,
+      this.props.displayUser
+    )
     if (!!this.props.displayUser.passive_relationships) {
       const relationship = this.props.displayUser.passive_relationships.find(
         rel => {
@@ -56,10 +63,20 @@ class UserProfileContainer extends Component {
         )
       }
     )
-    const profileStyle = {margin: '2%'}
+    const hasSongs = filteredDisplayUserSongs.length > 0
+    const profileStyle = { margin: "2%" }
+
     return !!this.props.displayUser.id ? (
       <Grid className={`user-profile-${id}`} columns={3} style={profileStyle}>
-        <Grid.Column width='10'>{mappedDisplayUserSongFeed}</Grid.Column>
+        <Grid.Column width="10">
+          {hasSongs ? (
+            _.reverse(mappedDisplayUserSongFeed)
+          ) : (
+            <Header size='medium'>
+              There doesn't seem to be anything here.
+            </Header>
+          )}
+        </Grid.Column>
         <UserProfileSide />
       </Grid>
     ) : (

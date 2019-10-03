@@ -2,7 +2,15 @@
 import React, { Component } from "react"
 import { Link, withRouter } from "react-router-dom"
 import { connect } from "react-redux"
-import { Button, Grid, Header, Label, Sticky, Search, Icon } from "semantic-ui-react"
+import {
+  Button,
+  Grid,
+  Header,
+  Label,
+  Sticky,
+  Search,
+  Icon
+} from "semantic-ui-react"
 import { logoutUser, findDisplayUser, isCurrentUser } from "../actions"
 import _ from "lodash"
 
@@ -40,6 +48,8 @@ class Nav extends Component {
   render() {
     // console.log(this.state)
     const { isLoggedIn } = this.props.user
+    const navButtonStyle = { padding: "1% 2% 1% 1%" }
+    const eachButtonStyle = { margin: "0% 1%" }
     // console.log(this.props.user)
     // TODO Add Seach Function
     // TODO Add Play/Pause to NavBar
@@ -47,24 +57,56 @@ class Nav extends Component {
     return (
       <Sticky className="nav-bar-container">
         {!!isLoggedIn ? (
-          <Button.Group floated='left'>
-            <Button as={Link} to="/" icon='music' label="Feed" />
+          <Button.Group style={navButtonStyle} padded="vertically">
+            <Button
+              as={Link}
+              to="/"
+              icon="music"
+              label="Feed"
+              floated="left"
+              style={eachButtonStyle}
+            />
             <Button
               as={Link}
               onClick={user_id =>
                 this.goToCurrentUserProfile(this.props.user.id)
               }
+              style={eachButtonStyle}
               label="Prof"
-              icon='user'
+              icon="user"
             />
-            <Button as={Link} to="/newsong" icon='upload' label="Upload Song" />
+            <Button
+              as={Link}
+              to="/newsong"
+              icon="upload"
+              style={eachButtonStyle}
+              label="Upload Song"
+            />
             {/* <Button as={Link} to="/editaccount" icon='edit' label="Edit Profile" /> */}
-            <Button as={Link} onClick={this.handleLogout} icon='log out'label="Logout" />
+            <Button
+              style={{ margin: "0% 1%", floated:'right' }}
+              as={Link}
+              onClick={this.handleLogout}
+              icon="log out"
+              label="Logout"
+            />
           </Button.Group>
         ) : (
-          <Button.Group>
-            <Button as={Link} to="/" icon='music' label="Feed" />
-            <Button as={Link} to="/login" icon='sign-in' label="Login" />
+          <Button.Group style={eachButtonStyle} padded="vertically">
+            <Button
+              as={Link}
+              to="/"
+              icon="music"
+              style={eachButtonStyle}
+              label="Feed"
+            />
+            <Button
+              as={Link}
+              to="/login"
+              icon="sign-in"
+              style={eachButtonStyle}
+              label="Login"
+            />
           </Button.Group>
         )}
         {/* <Button name="play-pause" onClick={null} circular icon="play" /> */}

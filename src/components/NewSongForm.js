@@ -14,6 +14,7 @@ class NewSongForm extends Component {
     selectedTags: []
   }
 
+
   handleNewSongSubmit = e => {
     e.preventDefault()
     const {title, genre, description, song_link} = this.state
@@ -57,7 +58,7 @@ class NewSongForm extends Component {
   render() {
     const tagOptions = this.tagOptions(this.props.allTags)
     // console.log(this.state)
-    const songFormStyle = {margin: '10%'}
+    const songFormStyle = {margin: '10% 20%'}
     return (
       <div className="new-song-form">
         <Grid textAlign="center" verticalAlign="middle" style={songFormStyle}>
@@ -73,6 +74,7 @@ class NewSongForm extends Component {
                 <Form.Input
                   onChange={this.handleNewSongChange}
                   placeholder="Title"
+                  // label='Title'
                   value={this.state.title}
                   type="text"
                   name="title"
@@ -80,12 +82,14 @@ class NewSongForm extends Component {
                 <Form.Input
                   onChange={this.handleNewSongChange}
                   placeholder="Genre"
+                  // label="Genre"
                   type="text"
                   name="genre"
                 />
                 <Form.Input
                   onChange={this.handleNewSongChange}
                   placeholder="Description"
+                  // label="Description"
                   type="text"
                   name="description"
                 />

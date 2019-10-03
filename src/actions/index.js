@@ -88,7 +88,7 @@ export function registerUser(formData, history) {
       .then(resp => resp.json())
       .then(data => {
         if (data.error) {
-          console.log(data.error)
+          alert(data.error[0])
         } else {
           localStorage.token = data.jwt
           dispatch(loginUser(data.user))

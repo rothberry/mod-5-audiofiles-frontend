@@ -40,7 +40,7 @@ class SongShowPage extends Component {
       : null
     const { isLoggedIn } = this.props.user
 
-    const waveformStyle = { maxHeight: "50vh" }
+    const waveformStyle = { padding: "3%", maxHeight: "50vh" }
     // const waveformStyle = { height: "40%" }
     return isLoaded ? (
       <div className={`song-show-${song.id}`}>
@@ -63,20 +63,21 @@ class SongShowPage extends Component {
                   cursor: "pointer"
                 }}
               >
-                {song.user.username}
+                By: {song.user.username}
               </Header>
-            </Grid.Column>
-            <Grid.Column>
-              <span style={{ fontStyle: "italic" }}>{mappedTags}</span>
               {this.props.user.isCurrentUser ? (
                 <Button
                   icon="delete"
-                  // floated='right'
+                  content='Delete Track'
+                  floated="right"
                   onClick={(song_id, history) =>
                     this.props.deleteSong(song.id, this.props.history)
                   }
                 />
               ) : null}
+            </Grid.Column>
+            <Grid.Column>
+              <span style={{ fontStyle: "italic" }}>{mappedTags}</span>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
@@ -91,8 +92,10 @@ class SongShowPage extends Component {
             />
           </Grid.Row>
         </Segment>
-        <Segment style={{margin: '0 20%'}}>
-          <Header size="medium" style={{margin: '0 1%'}}>{song.description}</Header>
+        <Segment style={{ margin: "0 20%" }}>
+          <Header size="medium" style={{ margin: "0 1%" }}>
+            {song.description}
+          </Header>
           {isLoggedIn ? <SongCommentForm /> : null}
           <SongCommentShow />
         </Segment>

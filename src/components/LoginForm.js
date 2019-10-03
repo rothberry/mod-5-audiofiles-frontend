@@ -1,9 +1,9 @@
 import React, { Component } from "react"
-import { Button, Form, Grid, Header, Message, Segment } from "semantic-ui-react"
+import { Button, Form, Grid, Header, Message, Segment, Image } from "semantic-ui-react"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
 import { loginCurrentUser } from "../actions"
-
+const audioWaveImg = 'https://library.kissclipart.com/20180919/pww/kissclipart-sound-wave-vector-clipart-sound-wave-79091298684b3993.png'
 class LoginForm extends Component {
   state = {
     username: "",
@@ -22,14 +22,16 @@ class LoginForm extends Component {
   }
 
   render() {
-    const loginStyle = {margin: '30%'}
+    const loginStyle = {margin: '5% 30%'}
+    const buttonStyle = {marginTop: '2%' }
     return (
       <div className="login-form">
         <Grid textAlign="center" verticalAlign="middle" style={loginStyle}>
           <Grid.Column>
             <Form size="medium" onSubmit={this.handleLoginSubmit}>
               <Segment stacked>
-                <Header as="h1">Login</Header>
+                <Image centered src={audioWaveImg} style={{width: 200, height: 200}}/>
+                <Header as="h1">Welcome to SoundClone!</Header>
                 <Form.Input
                   onChange={this.handleLoginChange}
                   fluid
@@ -48,14 +50,14 @@ class LoginForm extends Component {
                   type="password"
                   name="password"
                 />
-                <Button type="submit" primary fluid size="large">
+                <Button type="submit" color='blue' fluid size="large" style={buttonStyle}>
                   Login
+                </Button>
+                <Button  as={Link} to='/createaccount' color='grey' fluid size="large" style={buttonStyle}>
+                  Sign Up!
                 </Button>
               </Segment>
             </Form>
-            <Message>
-              <Link to="/createaccount">Create Account</Link>
-            </Message>
           </Grid.Column>
         </Grid>
       </div>

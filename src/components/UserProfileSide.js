@@ -21,6 +21,8 @@ import {
   setCurrentUser,
   deleteUser
 } from "../actions"
+const defImg =
+  "https://thespinoff.co.nz/wp-content/uploads/2019/09/Goose-game-header-850x510.jpg"
 
 class UserProfileSide extends Component {
   // handleFollowUser = (followed_id, follower_id) => {
@@ -52,7 +54,6 @@ class UserProfileSide extends Component {
     const isTwit = !twitter_url
     const isSound = !soundcloud_url
     const isImg = !!img_url
-    console.log(img_url)
     let isFollowing
     if (!!this.props.user.id) {
       isFollowing = this.props.followers.find(user => {
@@ -77,47 +78,58 @@ class UserProfileSide extends Component {
         </Label>
       )
     })
-    const buttonStyle = { width: "50%" }
+
+    // const buttonStyle = { width: "50%" }
+    const eachButtonStyle = { width: "40%", margin: "0 1%" }
+    const imgStyle = { height: 300, width: 300 }
     // console.log('displayuser: ', this.displayUser)
     // console.log(this.props)
     // TODO Need correct img urls cause i can't edit shit..
     return (
       <Grid.Column>
-        <Sticky>
-          <Segment>
-            {isImg ? <Image src={img_url} circular alt=""  centered/> : null}
-            <Header as='h1' icon='user secret' content={username} />
-            <Header as='h2' icon='user' content={name} />
-            <Header as='h3' icon='location arrow' content={location} />
-            <Header as='h4' icon='book' content={bio} />
-            <Button.Group centered circular style={buttonStyle}>
-              <Button
-                color="facebook"
-                as="a"
-                href={facebook_url}
-                disabled={isFace}
-              >
-                <Icon name="facebook" /> Facebook
-              </Button>
-              <Button
-                color="twitter"
-                as="a"
-                href={twitter_url}
-                disabled={isTwit}
-              >
-                <Icon name="twitter" /> Twitter
-              </Button>
-              <Button
-                color="orange"
-                as="a"
-                href={soundcloud_url}
-                disabled={isSound}
-              >
-                <Icon name="soundcloud" /> Soundcloud
-              </Button>
-            </Button.Group>
-          </Segment>
-        </Sticky>
+        {/* <Grid.Column > */}
+        {/* <Sticky> */}
+        <Segment className="feed-profile-side" style={{ marginTop: "5%" }}>
+          {isImg ? (
+            <Image src={newImgUrl} circular alt="" centered style={imgStyle} />
+          ) : (
+            <Image src={defImg} circular alt="" centered style={imgStyle} />
+          )}
+          <Header as="h1" icon="user secret" content={username} />
+          <Header as="h4" icon="user" content={name} />
+          <Header as="h4" icon="location arrow" content={location} />
+          <Header as="h4" icon="book" content={bio} />
+          <Button.Group centered circular>
+            <Button
+              color="facebook"
+              as="a"
+              href={facebook_url}
+              disabled={isFace}
+              style={eachButtonStyle}
+            >
+              <Icon name="facebook" /> Facebook
+            </Button>
+            <Button
+              style={eachButtonStyle}
+              color="twitter"
+              as="a"
+              href={twitter_url}
+              disabled={isTwit}
+            >
+              <Icon name="twitter" /> Twitter
+            </Button>
+            <Button
+              color="orange"
+              style={eachButtonStyle}
+              as="a"
+              href={soundcloud_url}
+              disabled={isSound}
+            >
+              <Icon name="soundcloud" /> Soundcloud
+            </Button>
+          </Button.Group>
+        </Segment>
+        {/* </Sticky> */}
         <br />
         {/* <Segment widths="equal">
           <h4>Followers: </h4>

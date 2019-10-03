@@ -3,7 +3,15 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
 import SongFeedComponent from "./SongFeedComponent"
-import { Grid, Button, Dropdown, Icon, Sticky } from "semantic-ui-react"
+import {
+  Grid,
+  Button,
+  Dropdown,
+  Icon,
+  Sticky,
+  Segment,
+  Header
+} from "semantic-ui-react"
 import _ from "lodash"
 import FeedUserProfileSide from "./FeedUserProfileSide"
 
@@ -62,32 +70,42 @@ class FeedContainer extends Component {
         </div>
       )
     })
-    const feedStyle = { margin: "2%"}
-    const feedCompStyle = { overflow: 'auto', maxHeight: '50%' }
+    const feedStyle = { margin: "2%" }
+    const feedCompStyle = { overflow: "auto", maxHeight: "50%" }
     // return allSongs.length > 0 ? (
     return (
       <div className="feed-container">
         <Grid columns={3} style={feedStyle}>
-          <Grid.Column width="10" style={feedCompStyle}>{_.reverse(mappedFeed)}</Grid.Column>
-          <Grid.Column>
-            <Sticky offset={10} pushing>
-              <FeedUserProfileSide feedUser={this.props.user} />
-              <h3>
-                Filter by tag: <Icon name="hashtag" />
-                <Dropdown
-                  header="Filter by Tag"
-                  onChange={this.handleFilter}
-                  options={tagOptions}
-                  search
-                  value={this.state.tagFilter}
-                  // icon="hashtag"
-                  // iconposition="left"
-                />
-                {this.state.tagFilter !== "" ? (
-                  <Button onClick={this.removeFilter}>Remove Filter</Button>
-                ) : null}
-              </h3>
-            </Sticky>
+          <Grid.Column width="10">
+            {!!this.props.user.username ? (
+              <Header as="h2">
+                Welcome to the SoundClone {this.props.user.username}!!!
+              </Header>
+            ) : (
+              <Header as="h2">
+                Welcome to the SoundClone!!!
+              </Header>
+            )}
+            <h3>
+              Filter by tag: <Icon name="hashtag" />
+              {"  "}
+              <Dropdown
+                header="Filter by Tag"
+                onChange={this.handleFilter}
+                options={tagOptions}
+                search
+                value={this.state.tagFilter}
+              />
+              {"  "}
+              {this.state.tagFilter !== "" ? (
+                <Button onClick={this.removeFilter}>Remove Filter</Button>
+              ) : null}
+            </h3>
+            {_.reverse(mappedFeed)}
+          </Grid.Column>
+          {/* <Grid.Column className="feed-profile-side"> */}
+          <Grid.Column style={{ marginTop: "1%" }}>
+            <FeedUserProfileSide feedUser={this.props.user} />
           </Grid.Column>
         </Grid>
       </div>

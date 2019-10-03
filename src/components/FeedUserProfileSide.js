@@ -19,11 +19,12 @@ import {
   setCurrentUser,
   deleteUser
 } from "../actions"
-
+const defImg = "https://thespinoff.co.nz/wp-content/uploads/2019/09/Goose-game-header-850x510.jpg"
+const testImg = 'file:///home/phil/Downloads/rothberry.jpg'      
 class FeedUserProfileSide extends Component {
   // handleFollowUser = (followed_id, follower_id) => {
   render() {
-    const { isCurrentUser } = this.props.user
+    const { isCurrentUser, isLoggedIn } = this.props.user
     const {
       username,
       name,
@@ -42,6 +43,14 @@ class FeedUserProfileSide extends Component {
     const isTwit = !twitter_url
     const isSound = !soundcloud_url
     const isImg = !!img_url
+    
+    let newImgUrl
+    if(!!isImg) {
+      newImgUrl = img_url
+    } else {
+      newImgUrl = defImg
+    }
+
     let isFollowing
     if (!!this.props.user.id) {
       isFollowing = this.props.followers.find(user => {
@@ -66,14 +75,33 @@ class FeedUserProfileSide extends Component {
         </Label>
       )
     })
+    const imgStyle = { height: 300, width: 300 }
 
-    return (
-      <Grid.Column>
-        <Segment circular>
-          {isImg ? <Image src={img_url} circular alt="" /> : null}
-          <Header size='large'>{username}</Header>
-        </Segment>
-      </Grid.Column>
+    return !!isLoggedIn ? (
+      <Segment className="feed-profile-side" style={{ marginTop: "5%" }}>
+        <Image
+          src={newImgUrl}
+          circular
+          alt=""
+          style={imgStyle}
+          centered
+          size="medium"
+        />
+        <Header size="large">{username}</Header>
+      </Segment>
+    ) : (
+      <Segment>
+        <Image
+          src={defImg}
+          circular
+          alt=""
+          style={imgStyle}
+          centered
+          size="medium"
+        />
+        {/* <Header size="tiny"></Header> */}
+        <Header size="large" as={Link} to='/login'>Please sign in</Header>        
+      </Segment>
     )
   }
 }

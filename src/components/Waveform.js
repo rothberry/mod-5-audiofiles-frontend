@@ -68,14 +68,19 @@ class Waveform extends React.Component {
 
   componentWillUnmount() {
     this.wavesurfer.empty()
+    // this.$waveform.firstChild.remove()
+    // this.$el.remove()
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.filtered !== this.props.filtered) {
+
+    let isFiltered = prevProps.filtered !== this.props.filtered
+    let isNewWave = prevProps.song_link !== this.props.song_link
+    if (isFiltered || isNewWave) {
       this.wavesurfer.empty()
-      this.wavesurfer.load(this.props.song_link)
-      // this.$waveform.firstChild.remove()
-      // this.buildWaveForm()
+      // this.wavesurfer.load(this.props.song_link)
+      this.$waveform.firstChild.remove()
+      this.buildWaveForm()
     }
     if (!!this.props.user.id && this.props.user.id !== prevProps.user.id) {
       this.setIsFavorite(this.props.user.id)
@@ -172,10 +177,10 @@ class Waveform extends React.Component {
     const { isLoading } = this.state
     const { isLoggedIn } = this.props.user
     const buttonStyle = { width: "20%" }
-    const waveStyle = { backgroundColor: 'aluminum' }
+    const waveStyle = { backgroundColor: 'aluminum', cursor: "text"  }
     const favColor = this.state.isFavorite ? "red" : "black"
     return (
-      <Segment className="waveform" style={{ cursor: "text" }} raised style={waveStyle} >
+      <Segment className="waveform" style={waveStyle} >
         <div className={`wave-${this.props.song.id}`}></div>
         {!this.state.isPlaying ? (
           <Button

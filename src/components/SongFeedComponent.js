@@ -2,7 +2,7 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
-import { Button, Grid, Header } from "semantic-ui-react"
+import { Button, Grid, Header, Segment } from "semantic-ui-react"
 import Waveform from "./Waveform"
 import { setDisplaySong } from "../actions"
 
@@ -28,31 +28,37 @@ class SongFeedComponent extends Component {
     const { user } = song
     return (
       <div className={`song-comp-${song.id}`}>
-        <Grid.Row columns={4}>
-          <Grid.Column>
-            <span
+        {/* <Grid.Row> */}
+          <Segment style={{backgroundColor: '#DFDFE1'}}>
+
+          {/* <Grid.Column> */}
+            <Header
+              size="medium"
+              as="span"
               onClick={this.goToSongPage}
               style={{ fontWeight: "bold", cursor: "pointer" }}
             >
               {song.title}
-            </span>
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column floated="left">
+            </Header>
+            <br />
+          {/* </Grid.Column> */}
+        {/* </Grid.Row> */}
+        {/* <Grid.Row> */}
+          {/* <Grid.Column floated="left"> */}
             {this.props.userClickEnabled ? null : (
-              <span
+              <Header
+                as="span"
                 onClick={this.goToUserProfile}
                 style={{ fontStyle: "italic", cursor: "pointer" }}
               >
-                {user.username}
-              </span>
+                By: {user.username}
+              </Header>
             )}
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
+          {/* </Grid.Column> */}
+        {/* </Grid.Row> */}
+        {/* <Grid.Row> */}
           <Waveform
-          filtered = {this.props.filtered}
+            filtered={this.props.filtered}
             song={song}
             song_link={songData.song_link}
             waveHeight={100}
@@ -61,8 +67,9 @@ class SongFeedComponent extends Component {
             mediaControls={true}
             maxCanvasWidth={500}
             showCommentCount={false}
-          />
-        </Grid.Row>
+            />
+            </Segment>
+        {/* </Grid.Row> */}
         <br />
       </div>
     )

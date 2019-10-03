@@ -31,7 +31,7 @@ class SongCommentForm extends Component {
     return (
       <div className="show-comment-form">
         <Form onSubmit={this.handleCommentSubmit}>
-          <Form.Group fluid >
+          <Form.Group>
             <Form.Input
               onChange={this.handleCommentInputChange}
               placeholder="Leave A Comment"
