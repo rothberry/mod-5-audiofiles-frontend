@@ -36,6 +36,29 @@ class UserProfileSide extends Component {
     // TODO Send DELETE fetch to backend
     // TODO Need the relationshipID
   }
+  // forceReload = () => {
+
+  // }
+  // mapFollowers = (followArray) => {
+  //   return followArray.map(fol => {
+  //     return (
+  //       <Label widths="equals">
+  //         <Icon src={fol.img_url}/>
+  //         <Link
+  //           // onClick={(allUsers, history) =>
+  //           //   this.props.findDisplayUser(
+  //           //     this.props.allUsers,
+  //           //     this.props.history
+  //           //   )
+  //           // }
+  //           to={`/profile/${fol.id}`}
+  //         >
+  //           {fol.username}
+  //         </Link>
+  //       </Label>
+  //     )
+  //   })
+  // }
 
   render() {
     const { isCurrentUser } = this.props.user
@@ -61,29 +84,16 @@ class UserProfileSide extends Component {
       })
     }
 
-    const mapFollowers = this.props.followers.map(fol => {
-      return (
-        <Label widths="equals">
-          <Link
-            onClick={(allUsers, history) =>
-              this.props.findDisplayUser(
-                this.props.allUsers,
-                this.props.history
-              )
-            }
-            to={`/profile/${fol.id}`}
-          >
-            {fol.username}
-          </Link>
-        </Label>
-      )
-    })
+    // const mappedFollowers = this.mapFollowers(this.props.followers)
+    // let isFollowers = !!mappedFollowers
 
-    // const buttonStyle = { width: "50%" }
+    // const mappedFolloweds = this.mapFollowers(this.props.followeds)
+    // let isFolloweds = !!mappedFolloweds
+
     const eachButtonStyle = { width: "40%", margin: "0 1%" }
     const imgStyle = { height: 300, width: 300 }
     // console.log('displayuser: ', this.displayUser)
-    // console.log(this.props)
+    console.log(this.props.user)
     // TODO Need correct img urls cause i can't edit shit..
     return (
       <Grid.Column>
@@ -91,7 +101,7 @@ class UserProfileSide extends Component {
         {/* <Sticky> */}
         <Segment className="feed-profile-side" style={{ marginTop: "5%" }}>
           {isImg ? (
-            <Image src={newImgUrl} circular alt="" centered style={imgStyle} />
+            <Image src={img_url} circular alt="" centered style={imgStyle} />
           ) : (
             <Image src={defImg} circular alt="" centered style={imgStyle} />
           )}
@@ -133,8 +143,8 @@ class UserProfileSide extends Component {
         <br />
         {/* <Segment widths="equal">
           <h4>Followers: </h4>
-          {mapFollowers.length > 0 ? (
-            <ul>{mapFollowers}</ul>
+          { isFollowers ? (
+            <ul>{mappedFollowers}</ul>
           ) : (
             <p>No Followers Yet!</p>
           )}

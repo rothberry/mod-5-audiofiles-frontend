@@ -31,7 +31,7 @@ class LoginForm extends Component {
             <Form size="medium" onSubmit={this.handleLoginSubmit}>
               <Segment stacked>
                 <Image centered src={audioWaveImg} style={{width: 200, height: 200}}/>
-                <Header as="h1">Welcome to SoundClone!</Header>
+                <Header as="h1">Welcome to AudioPhiles!</Header>
                 <Form.Input
                   onChange={this.handleLoginChange}
                   fluid

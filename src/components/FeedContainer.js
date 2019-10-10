@@ -79,11 +79,11 @@ class FeedContainer extends Component {
           <Grid.Column width="10">
             {!!this.props.user.username ? (
               <Header as="h2">
-                Welcome to the SoundClone {this.props.user.username}!!!
+                Welcome to the AudioPhiles {this.props.user.username}!!!
               </Header>
             ) : (
               <Header as="h2">
-                Welcome to the SoundClone!!!
+                Welcome to the AudioPhiles!!!
               </Header>
             )}
             <h3>
