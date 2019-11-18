@@ -421,6 +421,12 @@ export function goToUserProfile(user_id, history) {
   }
 }
 
+export function goDirectlyToUserProfile(user) {
+  return dispatch => {
+    dispatch(setDisplayUser(user))
+  }
+}
+
 // ! Sets all passive relationships
 export function createFollowersArray(allUsers, currentUser) {
   return dispatch => {

@@ -93,7 +93,7 @@ class UserProfileSide extends Component {
     const eachButtonStyle = { width: "40%", margin: "0 1%" }
     const imgStyle = { height: 300, width: 300 }
     // console.log('displayuser: ', this.displayUser)
-    console.log(this.props.user)
+    // console.log(this.props.user)
     // TODO Need correct img urls cause i can't edit shit..
     return (
       <Grid.Column>
