@@ -1,3 +1,4 @@
+/*eslint-disable */
 import React, { Component } from "react"
 import { Button, Form, Grid, Header, Message, Segment, Image } from "semantic-ui-react"
 import { connect } from "react-redux"

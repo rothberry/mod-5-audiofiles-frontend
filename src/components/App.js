@@ -58,7 +58,7 @@ class App extends React.Component {
             {!!isLoggedIn ? <NewSongForm /> : <Redirect push to="/login" />}
           </Route>
         </Switch>
-        {/* <Route path="/editaccount" render={() => <EditUserForm />} /> */}
+        <Route path="/editaccount" render={() => <EditUserForm />} />
       </div>
     )
   }
