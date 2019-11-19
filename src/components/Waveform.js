@@ -35,11 +35,10 @@ class Waveform extends React.Component {
       song_link,
       song
     } = this.props
-    // TODO Move waveColor and progress color to store
     let randWaveColor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
     let randProgColor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
-    let waveColor = "#0C0536"
-    let progressColor = "#C0BDCA"
+    // let waveColor = "#0C0536"
+    // let progressColor = "#C0BDCA"
     this.$el = ReactDOM.findDOMNode(this)
     this.$waveform = this.$el.querySelector(`.wave-${song.id}`)
     if (this.$waveform) {
@@ -58,7 +57,6 @@ class Waveform extends React.Component {
 
       // this.$waveform.style.backgroundColor = "black"
       this.wavesurfer.load(song_link)
-      // this.setState({ isLoading: false })
       this.wavesurfer.setVolume(1)
       // TODO Add duration to waveform
     } else {
@@ -68,8 +66,6 @@ class Waveform extends React.Component {
 
   componentWillUnmount() {
     this.wavesurfer.empty()
-    // this.$waveform.firstChild.remove()
-    // this.$el.remove()
   }
 
   componentDidUpdate(prevProps) {

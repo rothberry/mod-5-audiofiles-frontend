@@ -76,7 +76,6 @@ class NewUserForm extends Component {
                 name="bio"
               />
             </Form.Field>
-            {/* TODO Add Socials & Images */}
             <Form.Field>
               <Form.Input
                 onChange={this.handleNewUserChange}

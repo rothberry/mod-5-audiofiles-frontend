@@ -1,16 +1,13 @@
 /*eslint-disable */
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { Link, withRouter, Redirect } from "react-router-dom"
+import { withRouter } from "react-router-dom"
 import {
   Button,
   Grid,
-  Modal,
   Image,
   Icon,
-  Label,
   Segment,
-  Sticky,
   Header
 } from "semantic-ui-react"
 import {
@@ -94,7 +91,6 @@ class UserProfileSide extends Component {
     const imgStyle = { height: 300, width: 300 }
     // console.log('displayuser: ', this.displayUser)
     // console.log(this.props.user)
-    // TODO Need correct img urls cause i can't edit shit..
     return (
       <Grid.Column>
         {/* <Grid.Column > */}

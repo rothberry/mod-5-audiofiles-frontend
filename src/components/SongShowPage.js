@@ -32,7 +32,6 @@ class SongShowPage extends Component {
   }
 
   render() {
-    // TODO Give User ability to see Split channels
     const { song, song_link } = this.props.displaySong
     const isLoaded = !!this.props.displaySong.song
     const mappedTags = isLoaded
