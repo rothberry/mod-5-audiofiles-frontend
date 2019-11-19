@@ -2,17 +2,7 @@
 import React, { Component } from "react"
 import { Link, withRouter } from "react-router-dom"
 import { connect } from "react-redux"
-import {
-  Button,
-  Grid,
-  Container,
-  Header,
-  Label,
-  Item,
-  Sticky,
-  Search,
-  Icon
-} from "semantic-ui-react"
+import { Button, Search, Menu, Image, Container } from "semantic-ui-react"
 import {
   logoutUser,
   findDisplayUser,
@@ -21,7 +11,6 @@ import {
   goToUserProfile
 } from "../actions"
 import _ from "lodash"
-import { async } from "q"
 
 const initialState = {
   isLoading: false,
@@ -30,7 +19,14 @@ const initialState = {
 }
 
 const resultRenderer = ({ username, img_url }) => {
-  return <Item content={username} />
+  return (
+    <Container>
+      <span>
+        <Image src={img_url} circular inline alt='' size='tiny' />
+        {username}
+      </span>
+    </Container>
+  )
 }
 
 class Nav extends Component {
@@ -53,10 +49,8 @@ class Nav extends Component {
 
     setTimeout(() => {
       if (this.state.value.length < 1) return this.setState(initialState)
-
       const re = new RegExp(_.escapeRegExp(this.state.value), "i")
       const isMatch = result => re.test(result.username)
-
       this.setState({
         isLoading: false,
         results: _.filter(this.props.allUsers, isMatch)
@@ -74,117 +68,120 @@ class Nav extends Component {
     // console.log(this.state)
     const { isLoading, value, results } = this.state
     const { isLoggedIn } = this.props.user
-    const navButtonStyle = { padding: "1% 2% 1% 1%" }
-    const eachButtonStyle = { margin: "0% 1%" }
-    // console.log(this.props.user)
-    // TODO Add Seach Function
+    const navButtonStyle = { padding: "0% 1%" }
+    const eachButtonStyle = { margin: "0% 1% 0% 0%" }
     // TODO Add Play/Pause to NavBar
 
     return (
-      <Sticky className='nav-bar-container'>
+      <div className='nav-bar-container'>
         {!!isLoggedIn ? (
-          <Grid columns={8}>
-            <Grid.Column width={1}>
-              <Label content='Search For Artist' />
-            </Grid.Column>
-            <Grid.Column>
+          <Menu fixed='top' inverted fluid style={navButtonStyle}>
+            <Menu.Item>
+              Search For Artist:{" "}
               <Search
-                style={navButtonStyle}
+                // style={navButtonStyle}
                 loading={isLoading}
                 onResultSelect={this.handleResultSelect}
                 onSearchChange={_.debounce(this.handleSearchChange, 500, {
                   leading: true
                 })}
+                fluid
                 results={results}
                 value={value}
                 resultRenderer={resultRenderer}
                 minCharacters={1}
               />
-            </Grid.Column>
-            <Grid.Column>
-              <Button.Group style={navButtonStyle}>
-                <Button
-                  as={Link}
-                  to='/'
-                  icon='music'
-                  label='Feed'
-                  floated='left'
-                  style={eachButtonStyle}
-                />
-                <Button
-                  as={Link}
-                  onClick={user_id =>
-                    this.goToCurrentUserProfile(this.props.user.id)
-                  }
-                  style={eachButtonStyle}
-                  label='Prof'
-                  icon='user'
-                />
-                <Button
-                  as={Link}
-                  to='/newsong'
-                  icon='upload'
-                  style={eachButtonStyle}
-                  label='Upload Song'
-                />
-                <Button
-                  as={Link}
-                  to='/editaccount'
-                  style={eachButtonStyle}
-                  icon='edit'
-                  label='Edit Profile'
-                />
-                <Button
-                  style={eachButtonStyle}
-                  as={Link}
-                  onClick={this.handleLogout}
-                  icon='log out'
-                  label='Logout'
-                />
-              </Button.Group>
-            </Grid.Column>
-          </Grid>
+            </Menu.Item>
+            <Menu.Item>
+              <Button
+                as={Link}
+                to='/'
+                icon='music'
+                label='Feed'
+                floated='left'
+                // style={eachButtonStyle}
+              />
+            </Menu.Item>
+            {/* <Button.Group style={navButtonStyle}> */}
+            <Menu.Item>
+              <Button
+                onClick={user_id =>
+                  this.goToCurrentUserProfile(this.props.user.id)
+                }
+                // style={eachButtonStyle}
+                label='Prof'
+                icon='user'
+              />
+            </Menu.Item>
+            <Menu.Item>
+              <Button
+                as={Link}
+                to='/newsong'
+                icon='upload'
+                // style={eachButtonStyle}
+                label='Upload Song'
+              />
+            </Menu.Item>
+            <Menu.Item>
+              <Button
+                as={Link}
+                to='/editaccount'
+                // style={eachButtonStyle}
+                icon='edit'
+                label='Edit Profile'
+              />
+            </Menu.Item>
+            <Menu.Item>
+              <Button
+                // style={eachButtonStyle}
+                onClick={this.handleLogout}
+                icon='log out'
+                label='Logout'
+              />
+            </Menu.Item>
+            {/* </Button.Group> */}
+          </Menu>
         ) : (
-          <Grid columns={8}>
-            <Grid.Column width={1}>
-              <Label content='Search For Artist' />
-            </Grid.Column>
-            <Grid.Column>
-              <Search
-                style={navButtonStyle}
-                loading={isLoading}
-                onResultSelect={this.handleResultSelect}
-                onSearchChange={_.debounce(this.handleSearchChange, 500, {
-                  leading: true
-                })}
-                results={results}
-                value={value}
-                resultRenderer={resultRenderer}
-                minCharacters={1}
-              />
-            </Grid.Column>
-            <Grid.Column>
-              <Button.Group style={navButtonStyle}>
+          <div>
+            <Menu fixed='top' inverted>
+              <Menu.Item>
+                Search For Artist:{" "}
+                <Search
+                  style={navButtonStyle}
+                  loading={isLoading}
+                  onResultSelect={this.handleResultSelect}
+                  onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                    leading: true
+                  })}
+                  results={results}
+                  value={value}
+                  resultRenderer={resultRenderer}
+                  minCharacters={1}
+                />
+              </Menu.Item>
+              <Menu.Item>
                 <Button
                   as={Link}
                   to='/'
                   icon='music'
                   label='Feed'
                   floated='left'
-                  style={eachButtonStyle}
+                  // style={eachButtonStyle}
                 />
+              </Menu.Item>
+              <Menu.Item>
                 <Button
                   as={Link}
                   to='/login'
                   icon='sign-in'
-                  style={eachButtonStyle}
+                  // style={eachButtonStyle}
                   label='Login'
                 />
-              </Button.Group>
-            </Grid.Column>
-          </Grid>
+              </Menu.Item>
+            </Menu>
+          </div>
         )}
-      </Sticky>
+      </div>
     )
   }
 }

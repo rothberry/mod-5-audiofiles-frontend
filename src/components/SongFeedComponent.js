@@ -18,7 +18,6 @@ class SongFeedComponent extends Component {
   goToSongPage = e => {
     const song_id = this.props.songData.song.id
     this.props.history.push(`/songs/${song_id}`)
-    // TODO Might not need to setdisplay song because also in SongShowPage render
     this.props.setDisplaySong(this.props.allSongs, this.props.history)
   }
 

@@ -13,7 +13,7 @@ import _ from "lodash"
 
 class SongCommentShow extends Component {
   componentDidMount() {
-    // TODO This works, but it sucks
+    // TODO This works, but it's inefficent
     this.commentGrabber()
   }
 
