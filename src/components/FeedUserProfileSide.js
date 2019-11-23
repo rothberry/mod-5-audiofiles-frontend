@@ -20,7 +20,7 @@ import {
   deleteUser
 } from "../actions"
 const defImg = "https://thespinoff.co.nz/wp-content/uploads/2019/09/Goose-game-header-850x510.jpg"
-const testImg = 'file:///home/phil/Downloads/rothberry.jpg'      
+
 class FeedUserProfileSide extends Component {
   // handleFollowUser = (followed_id, follower_id) => {
   render() {

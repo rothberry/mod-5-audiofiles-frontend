@@ -1,15 +1,8 @@
 /*eslint-disable */
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { withRouter } from "react-router-dom"
-import {
-  Button,
-  Grid,
-  Image,
-  Icon,
-  Segment,
-  Header
-} from "semantic-ui-react"
+import { withRouter, Link } from "react-router-dom"
+import { Button, Grid, Image, Icon, Segment, Header } from "semantic-ui-react"
 import {
   findDisplayUser,
   followUser,
@@ -80,13 +73,25 @@ class UserProfileSide extends Component {
         return user.id === this.props.user.id
       })
     }
-
+    const editAccountButton = (
+      <Button as={Link} to='/editaccount' icon='edit' label='Edit Account' />
+    )
+    const deleteAccountButton = (
+      <Button
+        onClick={(user_id, history) =>
+          this.props.deleteUser(this.props.user.id, this.props.history)
+        }
+        label='Delete Account'
+        icon='delete'
+      />
+    )
     // const mappedFollowers = this.mapFollowers(this.props.followers)
     // let isFollowers = !!mappedFollowers
 
     // const mappedFolloweds = this.mapFollowers(this.props.followeds)
     // let isFolloweds = !!mappedFolloweds
 
+    // const eachButtonStyle = { }
     const eachButtonStyle = { width: "40%", margin: "0 1%" }
     const imgStyle = { height: 300, width: 300 }
     // console.log('displayuser: ', this.displayUser)
@@ -95,43 +100,43 @@ class UserProfileSide extends Component {
       <Grid.Column>
         {/* <Grid.Column > */}
         {/* <Sticky> */}
-        <Segment className="feed-profile-side" style={{ marginTop: "5%" }}>
+        <Segment className='feed-profile-side' style={{ marginTop: "5%" }}>
           {isImg ? (
-            <Image src={img_url} circular alt="" centered style={imgStyle} />
+            <Image src={img_url} circular alt='' centered style={imgStyle} />
           ) : (
-            <Image src={defImg} circular alt="" centered style={imgStyle} />
+            <Image src={defImg} circular alt='' centered style={imgStyle} />
           )}
-          <Header as="h1" icon="user secret" content={username} />
-          <Header as="h4" icon="user" content={name} />
-          <Header as="h4" icon="location arrow" content={location} />
-          <Header as="h4" icon="book" content={bio} />
-          <Button.Group centered circular>
+          <Header as='h1' icon='user secret' content={username} />
+          <Header as='h4' icon='user' content={name} />
+          <Header as='h4' icon='location arrow' content={location} />
+          <Header as='h4' icon='book' content={bio} />
+          <Button.Group centered circular fluid>
             <Button
-              color="facebook"
-              as="a"
+              color='facebook'
+              as='a'
               href={facebook_url}
               disabled={isFace}
               style={eachButtonStyle}
             >
-              <Icon name="facebook" /> Facebook
+              <Icon name='facebook' /> Facebook
             </Button>
             <Button
               style={eachButtonStyle}
-              color="twitter"
-              as="a"
+              color='twitter'
+              as='a'
               href={twitter_url}
               disabled={isTwit}
             >
-              <Icon name="twitter" /> Twitter
+              <Icon name='twitter' /> Twitter
             </Button>
             <Button
-              color="orange"
+              color='orange'
               style={eachButtonStyle}
-              as="a"
+              as='a'
               href={soundcloud_url}
               disabled={isSound}
             >
-              <Icon name="soundcloud" /> Soundcloud
+              <Icon name='soundcloud' /> Soundcloud
             </Button>
           </Button.Group>
         </Segment>
@@ -146,13 +151,10 @@ class UserProfileSide extends Component {
           )}
         </Segment> */}
         {isCurrentUser ? (
-          <Button
-            onClick={(user_id, history) =>
-              this.props.deleteUser(this.props.user.id, this.props.history)
-            }
-          >
-            Delete Account
-          </Button>
+          <Button.Group>
+            {editAccountButton}
+            {deleteAccountButton}
+          </Button.Group>
         ) : null}
 
         {/* {!!isFollowing || isCurrentUser ? null : (
@@ -179,14 +181,11 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    findDisplayUser,
-    followUser,
-    currentUser,
-    currentRelationship,
-    setCurrentUser,
-    deleteUser
-  }
-)(withRouter(UserProfileSide))
+export default connect(mapStateToProps, {
+  findDisplayUser,
+  followUser,
+  currentUser,
+  currentRelationship,
+  setCurrentUser,
+  deleteUser
+})(withRouter(UserProfileSide))
