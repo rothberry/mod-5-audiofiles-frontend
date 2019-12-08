@@ -2,16 +2,7 @@
 import React, { Component } from "react"
 import { Link, withRouter } from "react-router-dom"
 import { connect } from "react-redux"
-import {
-  Button,
-  Search,
-  Menu,
-  Image,
-  Container,
-  Grid,
-  GridColumn,
-  Label
-} from "semantic-ui-react"
+import { Button, Search, Menu, Image, Container } from "semantic-ui-react"
 import {
   logoutUser,
   findDisplayUser,
@@ -104,9 +95,7 @@ class Nav extends Component {
     const newSongButton = (
       <Button as={Link} to='/newsong' icon='upload' label='Upload' />
     )
-    // const editAccountButton = (
-    //   <Button as={Link} to='/editaccount' icon='edit' label='EditProfile' />
-    // )
+
     const logoutButton = (
       <Button onClick={this.handleLogout} icon='log out' label='Logout' />
     )
