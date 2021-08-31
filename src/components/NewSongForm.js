@@ -11,14 +11,13 @@ class NewSongForm extends Component {
     genre: "",
     description: "",
     song_link: "",
-    selectedTags: []
+    selectedTags: [],
   }
 
-
-  handleNewSongSubmit = e => {
+  handleNewSongSubmit = (e) => {
     e.preventDefault()
-    const {title, genre, description, song_link} = this.state
-    const isRealSong = !!title && !!genre && !!description && !!song_link 
+    const { title, genre, description, song_link } = this.state
+    const isRealSong = !!title && !!genre && !!description && !!song_link
     if (isRealSong) {
       const user_id = this.props.user.id
       this.props.postNewSong(this.state, user_id, this.props.history)
@@ -27,26 +26,26 @@ class NewSongForm extends Component {
     }
   }
 
-  handleNewSongChange = e => {
+  handleNewSongChange = (e) => {
     this.setState({ [e.target.name]: e.target.value })
   }
 
-  handleSelectedTags = (e, {value}) => {
-    this.setState({selectedTags: value})
+  handleSelectedTags = (e, { value }) => {
+    this.setState({ selectedTags: value })
   }
 
-  onFilesAdded = e => {
+  onFilesAdded = (e) => {
     const targetSongLink = e.target.files[0]
-    const titleValue = targetSongLink.name.slice(0,-4)
+    const titleValue = targetSongLink.name.slice(0, -4)
     this.setState({ song_link: targetSongLink, title: titleValue })
   }
 
   tagOptions = (allTags) => {
-    return allTags.map(tag => {
+    return allTags.map((tag) => {
       return {
         key: tag.name,
-        text: tag.name.split('_').join(' '),
-        value: tag.name
+        text: tag.name.split("_").join(" "),
+        value: tag.name,
       }
     })
   }
@@ -56,42 +55,43 @@ class NewSongForm extends Component {
   }
 
   render() {
+    // TODO Add loader for long uploads
     const tagOptions = this.tagOptions(this.props.allTags)
     // console.log(this.state)
-    const songFormStyle = {margin: '10% 20%'}
+    const songFormStyle = { margin: "10% 20%" }
     return (
-      <div className="new-song-form">
-        <Grid textAlign="center" verticalAlign="middle" style={songFormStyle}>
+      <div className='new-song-form'>
+        <Grid textAlign='center' verticalAlign='middle' style={songFormStyle}>
           <Grid.Column>
             <Form
-              size="medium"
+              size='medium'
               onSubmit={this.handleNewSongSubmit}
-              encType="multipart/form-data"
+              encType='multipart/form-data'
             >
               <Segment stacked>
-                <Header as="h1">Submit a new Track!</Header>
-                <Header as="h4">Please fill out entire form.</Header>
+                <Header as='h1'>Submit a new Track!</Header>
+                <Header as='h4'>Please fill out entire form.</Header>
                 <Form.Input
                   onChange={this.handleNewSongChange}
-                  placeholder="Title"
+                  placeholder='Title'
                   // label='Title'
                   value={this.state.title}
-                  type="text"
-                  name="title"
+                  type='text'
+                  name='title'
                 />
                 <Form.Input
                   onChange={this.handleNewSongChange}
-                  placeholder="Genre"
+                  placeholder='Genre'
                   // label="Genre"
-                  type="text"
-                  name="genre"
+                  type='text'
+                  name='genre'
                 />
                 <Form.Input
                   onChange={this.handleNewSongChange}
-                  placeholder="Description"
+                  placeholder='Description'
                   // label="Description"
-                  type="text"
-                  name="description"
+                  type='text'
+                  name='description'
                 />
                 <Form.Dropdown
                   onChange={this.handleSelectedTags}
@@ -101,15 +101,15 @@ class NewSongForm extends Component {
                   input
                   id='tag-dropdown'
                   options={tagOptions}
-                  placeholder="Select Tags"
-                  name="selectedTags"
+                  placeholder='Select Tags'
+                  name='selectedTags'
                 />
                 <input
-                  type="file"
+                  type='file'
                   accept='audio/*'
                   onChange={this.onFilesAdded}
                 />
-                <Button type="submit" primary fluid size="large">
+                <Button type='submit' primary fluid size='large'>
                   Submit New Song
                 </Button>
               </Segment>
@@ -121,14 +121,13 @@ class NewSongForm extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     user: state.user,
-    allTags: state.allTags
+    allTags: state.allTags,
   }
 }
 
-export default connect(
-  mapStateToProps,
-  { postNewSong }
-)(withRouter(NewSongForm))
+export default connect(mapStateToProps, { postNewSong })(
+  withRouter(NewSongForm)
+)
