@@ -29,10 +29,10 @@ class App extends React.Component {
 
   asyncFetches = async () => {
     await this.props.currentUser()
-    await this.props.fetchAllUsers()
-    await this.props.fetchAllSongs()
-    await this.props.fetchAllComments()
-    this.props.fetchAllTags()
+    // await this.props.fetchAllUsers()
+    // await this.props.fetchAllSongs()
+    // await this.props.fetchAllComments()
+    // this.props.fetchAllTags()
     // const { allUsers, user } = this.props
     // this.props.createFollowersArray(allUsers, user)
     // this.props.createFollowedsArray(allUsers, user)
@@ -67,7 +67,7 @@ class App extends React.Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
-    allUsers: state.allUsers
+    // allUsers: state.allUsers
   }
 }
 

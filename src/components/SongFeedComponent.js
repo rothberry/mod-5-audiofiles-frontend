@@ -2,20 +2,20 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
-import { Button, Grid, Header, Segment } from "semantic-ui-react"
+import { Header, Segment } from "semantic-ui-react"
 import Waveform from "./Waveform"
 import { setDisplaySong } from "../actions"
 
 class SongFeedComponent extends Component {
   state = {
-    filtered: this.props.filtered
+    filtered: this.props.filtered,
   }
-  goToUserProfile = e => {
+  goToUserProfile = (e) => {
     const user_id = this.props.songData.song.user.id
     this.props.history.push(`/profile/${user_id}`)
   }
 
-  goToSongPage = e => {
+  goToSongPage = (e) => {
     const song_id = this.props.songData.song.id
     this.props.history.push(`/songs/${song_id}`)
     this.props.setDisplaySong(this.props.allSongs, this.props.history)
@@ -28,34 +28,33 @@ class SongFeedComponent extends Component {
     return (
       <div className={`song-comp-${song.id}`}>
         {/* <Grid.Row> */}
-          <Segment style={{backgroundColor: '#DFDFE1'}}>
-
+        <Segment style={{ backgroundColor: "#DFDFE1" }}>
           {/* <Grid.Column> */}
-            <Header
-              size="medium"
-              as="span"
-              onClick={this.goToSongPage}
-              style={{ fontWeight: "bold", cursor: "pointer" }}
-            >
-              {song.title}
-            </Header>
-            <br />
+          <Header
+            size='medium'
+            as='span'
+            onClick={this.goToSongPage}
+            style={{ fontWeight: "bold", cursor: "pointer" }}
+          >
+            {song.title}
+          </Header>
+          <br />
           {/* </Grid.Column> */}
-        {/* </Grid.Row> */}
-        {/* <Grid.Row> */}
+          {/* </Grid.Row> */}
+          {/* <Grid.Row> */}
           {/* <Grid.Column floated="left"> */}
-            {this.props.userClickEnabled ? null : (
-              <Header
-                as="span"
-                onClick={this.goToUserProfile}
-                style={{ fontStyle: "italic", cursor: "pointer" }}
-              >
-                By: {user.username}
-              </Header>
-            )}
+          {this.props.userClickEnabled ? null : (
+            <Header
+              as='span'
+              onClick={this.goToUserProfile}
+              style={{ fontStyle: "italic", cursor: "pointer" }}
+            >
+              By: {user.username}
+            </Header>
+          )}
           {/* </Grid.Column> */}
-        {/* </Grid.Row> */}
-        {/* <Grid.Row> */}
+          {/* </Grid.Row> */}
+          {/* <Grid.Row> */}
           <Waveform
             filtered={this.props.filtered}
             song={song}
@@ -66,8 +65,8 @@ class SongFeedComponent extends Component {
             mediaControls={true}
             maxCanvasWidth={500}
             showCommentCount={false}
-            />
-            </Segment>
+          />
+        </Segment>
         {/* </Grid.Row> */}
         <br />
       </div>
@@ -75,14 +74,13 @@ class SongFeedComponent extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     user: state.user,
-    allSongs: state.allSongs
+    allSongs: state.allSongs,
   }
 }
 
-export default connect(
-  mapStateToProps,
-  { setDisplaySong }
-)(withRouter(SongFeedComponent))
+export default connect(mapStateToProps, { setDisplaySong })(
+  withRouter(SongFeedComponent)
+)

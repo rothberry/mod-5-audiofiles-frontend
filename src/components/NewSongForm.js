@@ -104,6 +104,7 @@ class NewSongForm extends Component {
                   placeholder='Select Tags'
                   name='selectedTags'
                 />
+                {/* TODO CORRECT AWS STUFF */}
                 <input
                   type='file'
                   accept='audio/*'

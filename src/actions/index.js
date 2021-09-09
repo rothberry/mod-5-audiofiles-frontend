@@ -10,28 +10,28 @@ export function loginUser(user) {
   console.log("login")
   return {
     type: "LOGIN_USER",
-    user
+    user,
   }
 }
 
 export function logoutUser() {
   console.log("logout")
   return {
-    type: "LOGOUT_USER"
+    type: "LOGOUT_USER",
   }
 }
 
 // ! Log's in user and issues token
 export function loginCurrentUser(formData, history) {
-  return dispatch => {
+  return (dispatch) => {
     const reqObj = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(formData),
     }
     return fetch("http://localhost:3000/api/v1/auth", reqObj)
-      .then(resp => resp.json())
-      .then(data => {
+      .then((resp) => resp.json())
+      .then((data) => {
         if (data.error) {
           alert(data.error)
         } else {
@@ -42,51 +42,75 @@ export function loginCurrentUser(formData, history) {
           history.push(`/profile/${data.user.id}`)
         }
       })
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
   }
 }
 
 // ! Finds the current user using token
 export function currentUser() {
-  return dispatch => {
+  return (dispatch) => {
     const token = localStorage.token
     const reqObj = {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     }
     return fetch("http://localhost:3000/api/v1/current_user", reqObj)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.error) {
           console.log("currentUser error: ", data)
         } else {
           dispatch(loginUser(data.user))
         }
       })
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
   }
 }
 
 export function addNewUser(newUser) {
   return {
     type: "ADD_NEW_USER",
-    newUser
+    newUser,
   }
 }
 
 // ! Creates a new User
 export function registerUser(formData, history) {
-  return dispatch => {
+  return (dispatch) => {
+    // TODO Send Image file to AWS
+    console.log("makin' da user broh")
+    const {
+      username,
+      name,
+      password,
+      location,
+      bio,
+      facebook_url,
+      twitter_url,
+      soundcloud_url,
+      image_link,
+    } = formData
+    let userData = new FormData()
+    userData.append("user[username]", username)
+    userData.append("user[name]", name)
+    userData.append("user[password]", password)
+    userData.append("user[location]", location)
+    userData.append("user[bio]", bio)
+    userData.append("user[facebook_url]", facebook_url)
+    userData.append("user[twitter_url]", twitter_url)
+    userData.append("user[soundcloud_url]", soundcloud_url)
+    userData.append("user[image_link]", image_link)
+
     const reqObj = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData)
+      headers: { Accepts: "application/json" },
+      body: userData,
     }
     return fetch(fetchUsersUrl, reqObj)
-      .then(resp => resp.json())
-      .then(data => {
+      .then((resp) => resp.json())
+      .then((data) => {
         if (data.error) {
           alert(data.error[0])
         } else {
@@ -99,37 +123,38 @@ export function registerUser(formData, history) {
           // history.push(`/feed`)
         }
       })
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
   }
 }
 
 export function updateUser(user) {
   return {
     type: "UPDATE_USER",
-    user
+    user,
   }
 }
 
 // ! Updates CurrentUser
 export function updateCurrentUser(user, formData, history) {
-  return dispatch => {
+  return (dispatch) => {
     const token = localStorage.token
     const fetchUpdateUserUrl = fetchUsersUrl + "/" + user.id
+    // TODO Have update user update the image on AWS
     const reqUpdObj = {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
         Accepts: "application/json",
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(formData),
     }
     console.log(formData)
     const result = confirm("Are you sure you want to edit?")
     if (result) {
       return fetch(fetchUpdateUserUrl, reqUpdObj)
-        .then(res => res.json())
-        .then(user => {
+        .then((res) => res.json())
+        .then((user) => {
           console.log(user)
           if (!user.error) {
             dispatch(updateUser(user))
@@ -146,15 +171,15 @@ export function updateCurrentUser(user, formData, history) {
 export function setAllUsers(allUsers) {
   return {
     type: "SET_ALL_USERS",
-    allUsers
+    allUsers,
   }
 }
 
 export function fetchAllUsers() {
-  return dispatch => {
+  return (dispatch) => {
     return fetch(fetchUsersUrl)
-      .then(resp => resp.json())
-      .then(data => {
+      .then((resp) => resp.json())
+      .then((data) => {
         // console.log(data)
         if (data.error) {
           console.log(data.error)
@@ -162,7 +187,7 @@ export function fetchAllUsers() {
           dispatch(setAllUsers(data))
         }
       })
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
   }
 }
 
@@ -170,22 +195,22 @@ export function fetchAllUsers() {
 export function setAllSongs(allSongs) {
   return {
     type: "SET_ALL_SONGS",
-    allSongs
+    allSongs,
   }
 }
 
 export function fetchAllSongs() {
-  return dispatch => {
+  return (dispatch) => {
     return fetch(fetchSongsUrl)
-      .then(resp => resp.json())
-      .then(data => {
+      .then((resp) => resp.json())
+      .then((data) => {
         if (data.error) {
           console.log(data.error)
         } else {
           dispatch(setAllSongs(data))
         }
       })
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
   }
 }
 
@@ -193,13 +218,13 @@ export function fetchAllSongs() {
 export function addNewSongToFeed(newSong) {
   return {
     type: "ADD_SONG_TO_FEED",
-    newSong
+    newSong,
   }
 }
 
 // ! POST New Song
 export function postNewSong(formData, user_id, history) {
-  return dispatch => {
+  return (dispatch) => {
     console.log("post da new song bruh", formData)
     const { title, genre, description, song_link, selectedTags } = formData
     let songData = new FormData()
@@ -212,13 +237,13 @@ export function postNewSong(formData, user_id, history) {
     const reqObjPostSong = {
       method: "POST",
       headers: {
-        Accepts: "application/json"
+        Accepts: "application/json",
       },
-      body: songData
+      body: songData,
     }
     return fetch(fetchSongsUrl, reqObjPostSong)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.error) {
           console.log("error: ", data.error)
         } else {
@@ -227,7 +252,7 @@ export function postNewSong(formData, user_id, history) {
           history.push(`/songs/${data.song.id}`)
         }
       })
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
   }
 }
 
@@ -235,26 +260,29 @@ export function postNewSong(formData, user_id, history) {
 export function setDisplayUser(displayUser) {
   return {
     type: "SET_DISPLAY_USER",
-    displayUser
+    displayUser,
   }
 }
 
 export function findDisplayUser(allUsers, history) {
-  return dispatch => {
+  // TODO instead of searching through store, fetch to users/:id
+  return (dispatch) => {
     const displayUserID = Number(history.location.pathname.slice(9))
-    const displayUser = allUsers.find(u => {
-      return u.id === displayUserID
-    })
-    if (!!displayUser) {
-      dispatch(setDisplayUser(displayUser))
-    }
+    fetch(fetchUsersUrl + "/" + displayUserID)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data)
+        if (!!data.user) {
+          dispatch(setDisplayUser(data.user))
+        }
+      })
   }
 }
 
 export function findDisplayUserThroughSong(allUsers, displaySong) {
-  return dispatch => {
+  return (dispatch) => {
     const displayUserID = Number(displaySong.song.user.id)
-    const displayUser = allUsers.find(u => {
+    const displayUser = allUsers.find((u) => {
       return u.id === displayUserID
     })
     dispatch(setDisplayUser(displayUser))
@@ -265,14 +293,14 @@ export function findDisplayUserThroughSong(allUsers, displaySong) {
 export function setDisplaySong(displaySong) {
   return {
     type: "SET_DISPLAY_SONG",
-    displaySong
+    displaySong,
   }
 }
 
 export function findDisplaySong(allSongs, history) {
-  return dispatch => {
+  return (dispatch) => {
     const displaySongID = Number(history.location.pathname.slice(7))
-    const displaySong = allSongs.find(song => {
+    const displaySong = allSongs.find((song) => {
       return song.song.id === displaySongID
     })
     // console.log("displaySong: ", displaySong)
@@ -286,30 +314,30 @@ export function findDisplaySong(allSongs, history) {
 export function setAllComments(allComments) {
   return {
     type: "SET_ALL_COMMENTS",
-    allComments
+    allComments,
   }
 }
 
 // ! GET fetchs all Comments
 export function fetchAllComments() {
-  return dispatch => {
+  return (dispatch) => {
     return fetch(fetchCommentsUrl)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.error) {
           console.log(data.error)
         } else {
           dispatch(setAllComments(data))
         }
       })
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
   }
 }
 
 // ! GET All display Comments
 export function findDisplayComments(allComments, displaySong) {
-  return dispatch => {
-    const displayComments = allComments.filter(comment => {
+  return (dispatch) => {
+    const displayComments = allComments.filter((comment) => {
       return comment.song_id === displaySong.song.id
     })
     dispatch(setDisplayComments(displayComments))
@@ -320,7 +348,7 @@ export function findDisplayComments(allComments, displaySong) {
 export function setDisplayComments(displayComments) {
   return {
     type: "SET_DISPLAY_COMMENTS",
-    displayComments
+    displayComments,
   }
 }
 
@@ -328,25 +356,25 @@ export function setDisplayComments(displayComments) {
 export function addNewComment(comment) {
   return {
     type: "ADD_NEW_COMMENT",
-    comment
+    comment,
   }
 }
 
 // ! POST New Comment
 export function postNewComment(content, user_id, song_id) {
-  return dispatch => {
+  return (dispatch) => {
     const reqObj = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         content,
         user_id,
-        song_id
-      })
+        song_id,
+      }),
     }
     return fetch(fetchCommentsUrl, reqObj)
-      .then(resp => resp.json())
-      .then(data => {
+      .then((resp) => resp.json())
+      .then((data) => {
         if (data.error) {
           console.log(data.error)
         } else {
@@ -354,28 +382,28 @@ export function postNewComment(content, user_id, song_id) {
           dispatch(addNewComment(data))
         }
       })
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
   }
 }
 
 export function deleteComment(comment_id) {
   return {
     type: "DELETE_COMMENT",
-    comment_id
+    comment_id,
   }
 }
 
 // ! Delete Comment
 export function deleteCommentFromBackend(comment_id) {
-  return dispatch => {
+  return (dispatch) => {
     const reqDelObj = {
-      method: "DELETE"
+      method: "DELETE",
     }
     let result = confirm("Do you want to delete this comment?")
     if (result) {
       return fetch(`${fetchCommentsUrl}/${comment_id}`, reqDelObj)
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           console.log(data)
           if (data.error) {
             // handle error
@@ -384,7 +412,7 @@ export function deleteCommentFromBackend(comment_id) {
             dispatch(deleteComment(comment_id))
           }
         })
-        .catch(err => console.log(err))
+        .catch((err) => console.log(err))
     }
   }
 }
@@ -393,52 +421,52 @@ export function deleteCommentFromBackend(comment_id) {
 export function setAllTags(allTags) {
   return {
     type: "SET_ALL_TAGS",
-    allTags
+    allTags,
   }
 }
 
 // ! GET all Tags
 export function fetchAllTags() {
-  return dispatch => {
+  return (dispatch) => {
     return fetch(fetchTagsUrl)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.error) {
           console.log(data.error)
         } else {
           dispatch(setAllTags(data))
         }
       })
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
   }
 }
 // ? Some sort of filter songs by tag?
 
 // ! Goes to userProfile
 export function goToUserProfile(user_id, history) {
-  return dispatch => {
+  return (dispatch) => {
     return history.push(`/profile/${user_id}`)
   }
 }
 
 export function goDirectlyToUserProfile(user) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(setDisplayUser(user))
   }
 }
 
 // ! Sets all passive relationships
 export function createFollowersArray(allUsers, currentUser) {
-  return dispatch => {
+  return (dispatch) => {
     let followersIDArray = []
     let followersArray = []
     // console.log(allUsers, currentUser)
     if (!!currentUser.passive_relationships) {
       followersIDArray = currentUser.passive_relationships.map(
-        rel => rel.follower_id
+        (rel) => rel.follower_id
       )
-      followersArray = followersIDArray.map(followersID => {
-        return allUsers.find(user => {
+      followersArray = followersIDArray.map((followersID) => {
+        return allUsers.find((user) => {
           return user.id === followersID
         })
       })
@@ -451,21 +479,21 @@ export function createFollowersArray(allUsers, currentUser) {
 export function setAllFollowers(followers) {
   return {
     type: "SET_ALL_FOLLOWERS",
-    followers
+    followers,
   }
 }
 
 // ! Sets all active relationships
 export function createFollowedsArray(allUsers, currentUser) {
-  return dispatch => {
+  return (dispatch) => {
     let followedsIDArray = []
     let followedsArray = []
     if (!!currentUser.passive_relationships) {
       followedsIDArray = currentUser.active_relationships.map(
-        rel => rel.followed_id
+        (rel) => rel.followed_id
       )
-      followedsArray = followedsIDArray.map(followedsID => {
-        return allUsers.find(user => {
+      followedsArray = followedsIDArray.map((followedsID) => {
+        return allUsers.find((user) => {
           return user.id === followedsID
         })
       })
@@ -479,7 +507,7 @@ export function createFollowedsArray(allUsers, currentUser) {
 export function setAllFolloweds(followeds) {
   return {
     type: "SET_ALL_FOLLOWEDS",
-    followeds
+    followeds,
   }
 }
 
@@ -488,23 +516,23 @@ export function addFollowedUser() {}
 
 // ! Should update the followeds array in the store
 export function followUser(followed, follower_id) {
-  return dispatch => {
+  return (dispatch) => {
     const token = localStorage.token
     const reqPostObj = {
       method: "POST",
       headers: {
         "Content-type": "application/json",
         Accepts: "application/json",
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         follower_id: follower_id,
-        followed_id: followed.id
-      })
+        followed_id: followed.id,
+      }),
     }
     return fetch(fetchFollowingsUrl, reqPostObj)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         console.log(data)
         if (data.error) {
           // console.log(data.error)
@@ -513,30 +541,30 @@ export function followUser(followed, follower_id) {
           // dispatch(addFollowedUser(data))
         }
       })
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
   }
 }
 
 // ! Remove active relationship
 export function unfollowUser(relationship_id, displayUser) {
-  return dispatch => {
+  return (dispatch) => {
     const token = localStorage.token
     const reqDelObj = {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     }
     let result = confirm(
       `Are you sure you want to unfollow ${displayUser.username}?`
     )
     if (result) {
       return fetch(`${fetchFollowingsUrl}/${relationship_id}`, reqDelObj)
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           if (!data.error) {
             dispatch(removeFollowedUser())
           }
         })
-        .catch(err => console.log(err))
+        .catch((err) => console.log(err))
     }
   }
 }
@@ -546,19 +574,19 @@ export function removeFollowedUser() {}
 export function currentRelationship(relationship) {
   return {
     type: "CURRENT_RELATIONSHIP",
-    relationship
+    relationship,
   }
 }
 
 export function isCurrentUser(isCurrentUser) {
   return {
     type: "IS_CURRENT_USER",
-    isCurrentUser
+    isCurrentUser,
   }
 }
 
 export function setCurrentUser(displayUser, user) {
-  return dispatch => {
+  return (dispatch) => {
     const userCheck = displayUser.id === user.id
     if (userCheck) {
       dispatch(isCurrentUser(true))
@@ -572,20 +600,20 @@ export function setCurrentUser(displayUser, user) {
 export function removeSong(song_id) {
   return {
     type: "REMOVE_SONG_FROM_FEED",
-    song_id
+    song_id,
   }
 }
 
 export function deleteSong(song_id, history) {
-  return dispatch => {
+  return (dispatch) => {
     const reqDelObj = {
-      method: "DELETE"
+      method: "DELETE",
     }
     let result = confirm("Do you want to delete this song?")
     if (result) {
       return fetch(`${fetchSongsUrl}/${song_id}`, reqDelObj)
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           console.log(data)
           if (data.error) {
             // handle error
@@ -595,7 +623,7 @@ export function deleteSong(song_id, history) {
             history.push("/")
           }
         })
-        .catch(err => console.log(err))
+        .catch((err) => console.log(err))
     }
   }
 }
@@ -604,22 +632,22 @@ export function deleteSong(song_id, history) {
 export function removeUser(user_id) {
   return {
     type: "REMOVE_USER",
-    user_id
+    user_id,
   }
 }
 
 export function deleteUser(user_id, history) {
-  return dispatch => {
+  return (dispatch) => {
     const token = localStorage.token
     const reqDelObj = {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     }
     let result = confirm("Are you sure you want to delete your account??")
     if (result) {
       return fetch(`${fetchUsersUrl}/${user_id}`, reqDelObj)
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           console.log(data)
           if (data.error) {
             alert(data.error)
@@ -633,25 +661,25 @@ export function deleteUser(user_id, history) {
             history.push("/login")
           }
         })
-        .catch(err => console.log(err))
+        .catch((err) => console.log(err))
     }
   }
 }
 
 export function removeDisplayUser() {
   return {
-    type: "REMOVE_DISPLAY_USER"
+    type: "REMOVE_DISPLAY_USER",
   }
 }
 export function removeDisplaySong() {
   return {
-    type: "REMOVE_DISPLAY_SONG"
+    type: "REMOVE_DISPLAY_SONG",
   }
 }
 
 export function removeSongsFromFeed(user_id) {
   return {
     type: "REMOVE_SONGS_FROM_DELETED_USER",
-    user_id
+    user_id,
   }
 }

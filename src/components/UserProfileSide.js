@@ -9,7 +9,7 @@ import {
   currentUser,
   currentRelationship,
   setCurrentUser,
-  deleteUser
+  deleteUser,
 } from "../actions"
 const defImg =
   "https://thespinoff.co.nz/wp-content/uploads/2019/09/Goose-game-header-850x510.jpg"
@@ -61,7 +61,7 @@ class UserProfileSide extends Component {
       img_url,
       facebook_url,
       twitter_url,
-      soundcloud_url
+      soundcloud_url,
     } = this.props.displayUser
     const isFace = !facebook_url
     const isTwit = !twitter_url
@@ -69,7 +69,7 @@ class UserProfileSide extends Component {
     const isImg = !!img_url
     let isFollowing
     if (!!this.props.user.id) {
-      isFollowing = this.props.followers.find(user => {
+      isFollowing = this.props.followers.find((user) => {
         return user.id === this.props.user.id
       })
     }
@@ -110,7 +110,7 @@ class UserProfileSide extends Component {
           <Header as='h4' icon='user' content={name} />
           <Header as='h4' icon='location arrow' content={location} />
           <Header as='h4' icon='book' content={bio} />
-          <Button.Group centered circular fluid>
+          <Button.Group fluid>
             <Button
               color='facebook'
               as='a'
@@ -171,13 +171,13 @@ class UserProfileSide extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     user: state.user,
     allUsers: state.allUsers,
     displayUser: state.displayUser,
     followeds: state.followeds,
-    followers: state.followers
+    followers: state.followers,
   }
 }
 
@@ -187,5 +187,5 @@ export default connect(mapStateToProps, {
   currentUser,
   currentRelationship,
   setCurrentUser,
-  deleteUser
+  deleteUser,
 })(withRouter(UserProfileSide))

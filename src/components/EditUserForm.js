@@ -1,6 +1,6 @@
 /*eslint-disable */
 import React, { Component } from "react"
-import { Button, Form, Header, Segment } from "semantic-ui-react"
+import { Button, Form, Header, Label, Segment } from "semantic-ui-react"
 import { connect } from "react-redux"
 import { updateCurrentUser } from "../actions"
 import { withRouter } from "react-router-dom"
@@ -15,14 +15,14 @@ class EditUserForm extends Component {
     img_url: "",
     facebook_url: "",
     twitter_url: "",
-    soundcloud_url: ""
+    soundcloud_url: "",
   }
 
   componentDidMount() {
     this.setState(this.props.user)
   }
 
-  handleUpdateUser = e => {
+  handleUpdateUser = (e) => {
     e.preventDefault()
     this.props.updateCurrentUser(
       this.props.user,
@@ -37,7 +37,7 @@ class EditUserForm extends Component {
     }
   }
 
-  handleEditUserChange = e => {
+  handleEditUserChange = (e) => {
     const targetValue = e.target.value
     const targetName = e.target.name
     this.setState({ [targetName]: targetValue })
@@ -57,7 +57,7 @@ class EditUserForm extends Component {
       img_url,
       facebook_url,
       soundcloud_url,
-      twitter_url
+      twitter_url,
     } = this.props.user
     const editUserStyle = { margin: "5% 30%" }
     return (
@@ -107,6 +107,14 @@ class EditUserForm extends Component {
               />
             </Form.Field>
             <Form.Field>
+              {/* TODO ADD AWS UPLOAD FEATURE */}
+              {/* <Label>Upload your image</Label>
+              <input
+                type='file'
+                accept='image/*'
+                onChange={this.onImageAdded}
+              /> */}
+
               <Form.Input
                 onChange={this.handleEditUserChange}
                 placeholder='Image Url'
@@ -150,9 +158,9 @@ class EditUserForm extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user,
   }
 }
 
