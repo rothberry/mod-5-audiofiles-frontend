@@ -1,6 +1,6 @@
 /*eslint-disable */
 import React, { Component } from "react"
-import { Button, Form, Header, Label, Segment } from "semantic-ui-react"
+import { Button, Form, Header, Segment } from "semantic-ui-react"
 import { connect } from "react-redux"
 import { updateCurrentUser } from "../actions"
 import { withRouter } from "react-router-dom"
@@ -9,7 +9,6 @@ class EditUserForm extends Component {
   state = {
     username: "",
     name: "",
-    // password: "",
     location: "",
     bio: "",
     img_url: "",
@@ -30,6 +29,7 @@ class EditUserForm extends Component {
       this.props.history
     )
   }
+  // TODO check use of this lifecycle method
   componentDidUpdate(prevProps) {
     // Typical usage (don't forget to compare props):
     if (this.props.user.id !== prevProps.user.id) {
@@ -51,7 +51,6 @@ class EditUserForm extends Component {
     const {
       username,
       name,
-      // password,
       location,
       bio,
       img_url,
@@ -60,6 +59,8 @@ class EditUserForm extends Component {
       twitter_url,
     } = this.props.user
     const editUserStyle = { margin: "5% 30%" }
+    // TODO Abstract repeated Form.Inputs
+
     return (
       <div className='edit-user-container'>
         <Segment size='medium' style={editUserStyle}>
@@ -82,13 +83,6 @@ class EditUserForm extends Component {
                 type='text'
                 name='username'
               />
-              {/* <Form.Input
-              onChange={this.handleEditUserChange}
-              defaultValue={password}
-              placeholder="Password"
-              type="password"
-              name="password"
-            /> */}
               <Form.Input
                 onChange={this.handleEditUserChange}
                 label='Location: '

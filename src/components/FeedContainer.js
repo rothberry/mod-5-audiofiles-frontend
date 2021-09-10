@@ -59,8 +59,9 @@ class FeedContainer extends Component {
     })
     const mappedFeed = filteredSongsByTag.map((songData) => {
       return (
-        <div className={`waveform-${songData.id}`}>
+        <div className={`waveform-${songData.id}`} key={songData.id}>
           <SongFeedComponent
+            key={songData.id}
             songData={songData}
             filtered={this.state.tagFilter}
           />
@@ -70,6 +71,7 @@ class FeedContainer extends Component {
     const feedStyle = { margin: "2%" }
     const feedCompStyle = { overflow: "auto", maxHeight: "50%" }
     // return allSongs.length > 0 ? (
+    // TODO Check logic of Feed
     return (
       <div className='feed-container'>
         <Grid columns={3} style={feedStyle}>
@@ -98,9 +100,8 @@ class FeedContainer extends Component {
             </h3>
             {_.reverse(mappedFeed)}
           </Grid.Column>
-          {/* <Grid.Column className="feed-profile-side"> */}
           <Grid.Column style={{ marginTop: "1%" }}>
-            <FeedUserProfileSide feedUser={this.props.user} />
+            <FeedUserProfileSide />
           </Grid.Column>
         </Grid>
       </div>

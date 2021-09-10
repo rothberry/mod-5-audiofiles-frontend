@@ -1,4 +1,7 @@
 /*eslint-disable */
+
+// TODO Separate all actions into respective files
+
 // ! All actions go in here
 const fetchUsersUrl = "http://localhost:3000/users"
 const fetchSongsUrl = "http://localhost:3000/songs"

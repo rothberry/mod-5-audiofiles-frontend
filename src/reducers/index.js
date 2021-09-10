@@ -1,6 +1,8 @@
 //! All Reducers here
 import { combineReducers } from "redux"
 
+// TODO Separate into respective files
+
 export default combineReducers({
   // * current user w/ relationships related to user
   user: user,
@@ -15,7 +17,7 @@ export default combineReducers({
   displaySong: displaySong,
   displayComments: displayComments,
   allTags: allTags,
-  currentRelationship: currentRelationship
+  currentRelationship: currentRelationship,
 })
 
 // ! Need to reset store on LOGOUT
@@ -25,21 +27,21 @@ function user(state = {}, action) {
       return {
         ...action.user,
         isLoggedIn: true,
-        ...state
+        ...state,
       }
     case "LOGOUT_USER":
       return {
-        user: {}
+        user: {},
       }
     case "UPDATE_USER":
       return {
         ...action.user,
-        ...state
+        ...state,
       }
     case "IS_CURRENT_USER":
       return {
         ...state,
-        isCurrentUser: action.isCurrentUser
+        isCurrentUser: action.isCurrentUser,
       }
     default:
       return state
@@ -53,7 +55,7 @@ function allUsers(state = [], action) {
     case "ADD_NEW_USER":
       return [...state, action.newUser]
     case "REMOVE_USER":
-      const newUserArray = state.filter(user => user.id !== action.user_id)
+      const newUserArray = state.filter((user) => user.id !== action.user_id)
       return newUserArray
     default:
       return state
@@ -67,10 +69,12 @@ function allSongs(state = [], action) {
     case "ADD_SONG_TO_FEED":
       return [...state, action.newSong]
     case "REMOVE_SONG_FROM_FEED":
-      const newSongArray = state.filter(so => so.song.id !== action.song_id)
+      const newSongArray = state.filter((so) => so.song.id !== action.song_id)
       return newSongArray
     case "REMOVE_SONGS_FROM_DELETED_USER":
-      const newSongArrayFromUser = state.filter(so => so.song.user_id !== action.user_id)
+      const newSongArrayFromUser = state.filter(
+        (so) => so.song.user_id !== action.user_id
+      )
       return newSongArrayFromUser
     default:
       return state
@@ -125,7 +129,7 @@ function allComments(state = [], action) {
       return [...state, action.comment]
     case "DELETE_COMMENT":
       const newDisplayComments = state.filter(
-        comment => comment.id !== action.comment_id
+        (comment) => comment.id !== action.comment_id
       )
       return newDisplayComments
     default:
@@ -141,7 +145,7 @@ function displayComments(state = [], action) {
       return [...state, action.comment]
     case "DELETE_COMMENT":
       const newDisplayComments = state.filter(
-        comment => comment.id !== action.comment_id
+        (comment) => comment.id !== action.comment_id
       )
       return newDisplayComments
     default:
