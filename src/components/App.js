@@ -16,7 +16,6 @@ import {
   logoutUser,
   fetchAllUsers,
   fetchAllSongs,
-  fetchAllComments,
   fetchAllTags,
   createFollowersArray,
   createFollowedsArray,
@@ -31,7 +30,6 @@ class App extends React.Component {
     await this.props.currentUser()
     // await this.props.fetchAllUsers()
     // await this.props.fetchAllSongs()
-    // await this.props.fetchAllComments()
     // this.props.fetchAllTags()
     // const { allUsers, user } = this.props
     // this.props.createFollowersArray(allUsers, user)
@@ -76,7 +74,6 @@ export default connect(mapStateToProps, {
   logoutUser,
   fetchAllUsers,
   fetchAllSongs,
-  fetchAllComments,
   fetchAllTags,
   createFollowersArray,
   createFollowedsArray,

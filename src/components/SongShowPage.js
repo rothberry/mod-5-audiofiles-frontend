@@ -8,9 +8,8 @@ import { Button, Grid, Header, Segment } from "semantic-ui-react"
 import {
   findDisplaySong,
   goToUserProfile,
-  findDisplayUserThroughSong,
   setCurrentUser,
-  deleteSong
+  deleteSong,
 } from "../actions"
 import SongCommentShow from "./SongCommentShow"
 
@@ -19,12 +18,8 @@ class SongShowPage extends Component {
     this.setDisplay()
   }
   setDisplay = async () => {
-    await this.props.findDisplaySong(this.props.allSongs, this.props.history)
-    await this.props.findDisplayUserThroughSong(
-      this.props.allUsers,
-      this.props.displaySong
-    )
-    await this.props.setCurrentUser(this.props.displayUser, this.props.user)
+    await this.props.findDisplaySong(this.props.history)
+    // await this.props.setCurrentUser(this.props.displayUser, this.props.user)
   }
 
   gotToEditSong = () => {
@@ -35,7 +30,7 @@ class SongShowPage extends Component {
     const { song, song_link } = this.props.displaySong
     const isLoaded = !!this.props.displaySong.song
     const mappedTags = isLoaded
-      ? song.tags.map(tag => <span> #{tag.name} </span>)
+      ? song.tags.map((tag) => <span> #{tag.name} </span>)
       : null
     const { isLoggedIn } = this.props.user
 
@@ -46,29 +41,29 @@ class SongShowPage extends Component {
         <Segment style={waveformStyle}>
           <Grid.Row>
             <Grid.Column>
-              <Header size="huge">{song.title}</Header>
+              <Header size='huge'>{song.title}</Header>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
-            <Grid.Column floated="left">
+            <Grid.Column floated='left'>
               <Header
-                as="span"
-                size="large"
+                as='span'
+                size='large'
                 onClick={(id, history) =>
                   this.props.goToUserProfile(song.user.id, this.props.history)
                 }
                 style={{
                   fontStyle: "italic",
-                  cursor: "pointer"
+                  cursor: "pointer",
                 }}
               >
                 By: {song.user.username}
               </Header>
               {this.props.user.isCurrentUser ? (
                 <Button
-                  icon="delete"
+                  icon='delete'
                   content='Delete Track'
-                  floated="right"
+                  floated='right'
                   onClick={(song_id, history) =>
                     this.props.deleteSong(song.id, this.props.history)
                   }
@@ -92,7 +87,7 @@ class SongShowPage extends Component {
           </Grid.Row>
         </Segment>
         <Segment style={{ margin: "0 20%" }}>
-          <Header size="medium" style={{ margin: "0 1%" }}>
+          <Header size='medium' style={{ margin: "0 1%" }}>
             {song.description}
           </Header>
           {isLoggedIn ? <SongCommentForm /> : null}
@@ -105,24 +100,19 @@ class SongShowPage extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     user: state.user,
     allUsers: state.allUsers,
     allSongs: state.allSongs,
     displaySong: state.displaySong,
     displayUser: state.displayUser,
-    allComments: state.allComments
   }
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    findDisplaySong,
-    goToUserProfile,
-    findDisplayUserThroughSong,
-    setCurrentUser,
-    deleteSong
-  }
-)(withRouter(SongShowPage))
+export default connect(mapStateToProps, {
+  findDisplaySong,
+  goToUserProfile,
+  setCurrentUser,
+  deleteSong,
+})(withRouter(SongShowPage))

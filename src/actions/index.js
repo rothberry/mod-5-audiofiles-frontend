@@ -268,7 +268,6 @@ export function setDisplayUser(displayUser) {
 }
 
 export function findDisplayUser(allUsers, history) {
-  // TODO instead of searching through store, fetch to users/:id
   return (dispatch) => {
     const displayUserID = Number(history.location.pathname.slice(9))
     fetch(fetchUsersUrl + "/" + displayUserID)
@@ -282,6 +281,7 @@ export function findDisplayUser(allUsers, history) {
   }
 }
 
+// TODO REMOVE
 export function findDisplayUserThroughSong(allUsers, displaySong) {
   return (dispatch) => {
     const displayUserID = Number(displaySong.song.user.id)
@@ -300,19 +300,29 @@ export function setDisplaySong(displaySong) {
   }
 }
 
-export function findDisplaySong(allSongs, history) {
+export function findDisplaySong(history) {
   return (dispatch) => {
     const displaySongID = Number(history.location.pathname.slice(7))
-    const displaySong = allSongs.find((song) => {
-      return song.song.id === displaySongID
-    })
+    fetch(fetchSongsUrl + "/" + displaySongID)
+      .then((res) => res.json())
+      .then((song) => {
+        console.log(song)
+        // debugger
+        dispatch(setDisplaySong(song))
+        dispatch(setDisplayComments(song["song"]["comments"]))
+        dispatch(setDisplayUser(song["song"]["user"]))
+      })
+
+    // const displaySong = allSongs.find((song) => {
+    //   return song.song.id === displaySongID
+    // })
     // console.log("displaySong: ", displaySong)
-    if (!!displaySong) {
-      dispatch(setDisplaySong(displaySong))
-    }
+    // if (!!displaySong) {
+    //   dispatch(setDisplaySong(displaySong))
+    // }
   }
 }
-
+/* REMOVED ALL COMMENTS 
 // ! Set All comments
 export function setAllComments(allComments) {
   return {
@@ -322,29 +332,35 @@ export function setAllComments(allComments) {
 }
 
 // ! GET fetchs all Comments
+// REMOVED
 export function fetchAllComments() {
   return (dispatch) => {
     return fetch(fetchCommentsUrl)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          console.log(data.error)
-        } else {
-          dispatch(setAllComments(data))
-        }
-      })
-      .catch((err) => console.log(err))
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.error) {
+        console.log(data.error)
+      } else {
+        dispatch(setAllComments(data))
+      }
+    })
+    .catch((err) => console.log(err))
   }
 }
+*/
 
 // ! GET All display Comments
-export function findDisplayComments(allComments, displaySong) {
+export function findDisplayComments(songId) {
   return (dispatch) => {
-    
-    const displayComments = allComments.filter((comment) => {
-      return comment.song_id === displaySong.song.id
-    })
-    dispatch(setDisplayComments(displayComments))
+    // const displayComments = allComments.filter((comment) => {
+    //   return comment.song_id === displaySong.song.id
+    // })
+    fetch(fetchSongsUrl + "/" + songId)
+      .then((res) => res.json())
+      .then((song) => {
+        console.log(song)
+        dispatch(setDisplayComments(song["song"].comments))
+      })
   }
 }
 
