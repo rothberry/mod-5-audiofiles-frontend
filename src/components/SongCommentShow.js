@@ -7,7 +7,7 @@ import {
   findDisplayComments,
   fetchAllComments,
   deleteCommentFromBackend,
-  goToUserProfile
+  goToUserProfile,
 } from "../actions"
 import _ from "lodash"
 
@@ -25,7 +25,7 @@ class SongCommentShow extends Component {
     )
   }
 
-  showTime = ts => {
+  showTime = (ts) => {
     const date = ts.getDate()
     const month = ts.getMonth()
     const year = ts.getYear()
@@ -39,38 +39,46 @@ class SongCommentShow extends Component {
 
   mappedComments = () => {
     const commentStyle = { backgroundColor: "#0C0536", color: "#C0BDCA" }
-    return this.props.displayComments.map(comment => {
+    return this.props.displayComments.map((comment) => {
       let ts = new Date(comment.created_at)
       const isCurrentUser = this.props.user.id === comment.user.id
       return (
-        <Segment as="ol" size="tiny">
+        <Segment as='ol' size='tiny'>
           {isCurrentUser ? (
             <Button
-              icon="delete"
-              size="mini"
-              onClick={comment_id =>
+              icon='delete'
+              size='mini'
+              onClick={(comment_id) =>
                 this.props.deleteCommentFromBackend(comment.id)
               }
             />
           ) : (
             <Button
-              icon="user"
-              size="mini"
+              icon='user'
+              size='mini'
               onClick={(user_id, history) =>
                 this.props.goToUserProfile(comment.user.id, this.props.history)
               }
             />
           )}
           <span
-            style={{ fontStyle: "italic", cursor: "pointer", paddingRight: "1%" }}
+            style={{
+              fontStyle: "italic",
+              cursor: "pointer",
+              paddingRight: "1%",
+            }}
             onClick={(user_id, history) =>
               this.props.goToUserProfile(comment.user.id, this.props.history)
             }
           >
             {comment.user.username}:{" "}
           </span>
-          <span style={{fontWeight: 'bold', paddingRight: '1%'}}>{comment.content} </span>
-          <span style={{ fontStyle: "italic", float: 'right' }}>{this.showTime(ts)}</span>
+          <span style={{ fontWeight: "bold", paddingRight: "1%" }}>
+            {comment.content}{" "}
+          </span>
+          <span style={{ fontStyle: "italic", float: "right" }}>
+            {this.showTime(ts)}
+          </span>
         </Segment>
       )
     })
@@ -80,34 +88,31 @@ class SongCommentShow extends Component {
     const commentStyleBox = {
       overflow: "auto",
       maxHeight: "30vh",
-      margin: "0% 1%"
+      margin: "0% 1%",
     }
     // console.log(this.props.allComments)
     return (
       <Segment.Group raised style={commentStyleBox}>
         {this.props.allComments.length > 0
           ? _.reverse(this.mappedComments())
-          : "loading..."}
+          : null}
       </Segment.Group>
     )
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     user: state.user,
     allComments: state.allComments,
     displaySong: state.displaySong,
-    displayComments: state.displayComments
+    displayComments: state.displayComments,
   }
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    findDisplayComments,
-    fetchAllComments,
-    deleteCommentFromBackend,
-    goToUserProfile
-  }
-)(withRouter(SongCommentShow))
+export default connect(mapStateToProps, {
+  findDisplayComments,
+  fetchAllComments,
+  deleteCommentFromBackend,
+  goToUserProfile,
+})(withRouter(SongCommentShow))

@@ -340,6 +340,7 @@ export function fetchAllComments() {
 // ! GET All display Comments
 export function findDisplayComments(allComments, displaySong) {
   return (dispatch) => {
+    
     const displayComments = allComments.filter((comment) => {
       return comment.song_id === displaySong.song.id
     })

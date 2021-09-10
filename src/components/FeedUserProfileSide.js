@@ -10,7 +10,8 @@ const defImg =
 class FeedUserProfileSide extends Component {
   render() {
     const { isLoggedIn, username, img_url } = this.props.user
-
+    
+    // TODO Modular Stylin
     const imgStyle = { height: 300, width: 300 }
 
     return !!isLoggedIn ? (
