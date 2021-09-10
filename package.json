@@ -1,6 +1,7 @@
 {
   "name": "mod-5-audiofiles-frontend",
   "version": "0.1.0",
+  "proxy": "http://localhost:3000",
   "private": true,
   "dependencies": {
     "lodash": "^4.17.21",

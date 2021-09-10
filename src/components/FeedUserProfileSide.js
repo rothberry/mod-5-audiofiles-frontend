@@ -10,16 +10,16 @@ const defImg =
 class FeedUserProfileSide extends Component {
   render() {
     const { isLoggedIn, username, img_url } = this.props.user
-    
+    console.log(this.props.user)
+
     // TODO Modular Stylin
     const imgStyle = { height: 300, width: 300 }
-
     return !!isLoggedIn ? (
-      <Segment className='feed-profile-side' style={{ marginTop: "5%" }}>
+      <Segment className='feed-profile-side'>
         <Image
           src={img_url}
           circular
-          alt=''
+          alt={img_url}
           style={imgStyle}
           centered
           size='medium'

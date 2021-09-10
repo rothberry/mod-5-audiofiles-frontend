@@ -13,10 +13,6 @@ class FeedContainer extends Component {
     tagFilter: "",
   }
 
-  componentDidMount() {
-    this.props.fetchAllTags()
-  }
-
   handleFilter = (e, { value }) => {
     this.setState({ tagFilter: value })
   }

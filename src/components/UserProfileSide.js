@@ -6,7 +6,6 @@ import { Button, Grid, Image, Icon, Segment, Header } from "semantic-ui-react"
 import {
   findDisplayUser,
   followUser,
-  currentUser,
   currentRelationship,
   setCurrentUser,
   deleteUser,
@@ -57,7 +56,6 @@ class UserProfileSide extends Component {
       name,
       location,
       bio,
-      id,
       img_url,
       facebook_url,
       twitter_url,
@@ -91,18 +89,21 @@ class UserProfileSide extends Component {
     // const mappedFolloweds = this.mapFollowers(this.props.followeds)
     // let isFolloweds = !!mappedFolloweds
 
-    // const eachButtonStyle = { }
-    const eachButtonStyle = { width: "40%", margin: "0 1%" }
+    const eachButtonStyle = { margin: "0 1%" }
     const imgStyle = { height: 300, width: 300 }
     // console.log('displayuser: ', this.displayUser)
     // console.log(this.props.user)
     return (
       <Grid.Column>
-        {/* <Grid.Column > */}
-        {/* <Sticky> */}
-        <Segment className='feed-profile-side' style={{ marginTop: "5%" }}>
+        <Segment className='feed-profile-side'>
           {isImg ? (
-            <Image src={img_url} circular alt='' centered style={imgStyle} />
+            <Image
+              src={img_url}
+              circular
+              alt={img_url}
+              centered
+              style={imgStyle}
+            />
           ) : (
             <Image src={defImg} circular alt='' centered style={imgStyle} />
           )}
@@ -117,30 +118,26 @@ class UserProfileSide extends Component {
               href={facebook_url}
               disabled={isFace}
               style={eachButtonStyle}
-            >
-              <Icon name='facebook' /> Facebook
-            </Button>
+              icon='facebook'
+            />
             <Button
               style={eachButtonStyle}
               color='twitter'
               as='a'
               href={twitter_url}
               disabled={isTwit}
-            >
-              <Icon name='twitter' /> Twitter
-            </Button>
+              icon='twitter'
+            />
             <Button
               color='orange'
               style={eachButtonStyle}
               as='a'
               href={soundcloud_url}
               disabled={isSound}
-            >
-              <Icon name='soundcloud' /> Soundcloud
-            </Button>
+              icon='soundcloud'
+            />
           </Button.Group>
         </Segment>
-        {/* </Sticky> */}
         <br />
         {/* <Segment widths="equal">
           <h4>Followers: </h4>
@@ -184,7 +181,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   findDisplayUser,
   followUser,
-  currentUser,
   currentRelationship,
   setCurrentUser,
   deleteUser,

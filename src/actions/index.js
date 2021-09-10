@@ -3,14 +3,8 @@
 // TODO Separate all actions into respective files
 
 // ! All actions go in here
-const fetchUsersUrl = "http://localhost:3000/users"
-const fetchSongsUrl = "http://localhost:3000/songs"
-const fetchCommentsUrl = "http://localhost:3000/comments"
-const fetchTagsUrl = "http://localhost:3000/tags"
-const fetchFollowingsUrl = "http://localhost:3000/followings"
 
 export function loginUser(user) {
-  console.log("login")
   return {
     type: "LOGIN_USER",
     user,
@@ -32,16 +26,16 @@ export function loginCurrentUser(formData, history) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     }
-    return fetch("http://localhost:3000/api/v1/auth", reqObj)
+    return fetch("/api/v1/auth", reqObj)
       .then((resp) => resp.json())
       .then((data) => {
+        console.log("Login:", data)
         if (data.error) {
           alert(data.error)
         } else {
           localStorage.token = data.jwt
           dispatch(loginUser(data.user))
           dispatch(isCurrentUser(true))
-          console.log(data)
           history.push(`/profile/${data.user.id}`)
         }
       })
@@ -50,6 +44,7 @@ export function loginCurrentUser(formData, history) {
 }
 
 // ! Finds the current user using token
+// * Can occasionally not load image because of the persisting state not updating to the new img_url, need to logout and back in to reload image
 export function currentUser() {
   return (dispatch) => {
     const token = localStorage.token
@@ -59,7 +54,7 @@ export function currentUser() {
         Authorization: `Bearer ${token}`,
       },
     }
-    return fetch("http://localhost:3000/api/v1/current_user", reqObj)
+    return fetch("/api/v1/current_user", reqObj)
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
@@ -111,7 +106,7 @@ export function registerUser(formData, history) {
       headers: { Accepts: "application/json" },
       body: userData,
     }
-    return fetch(fetchUsersUrl, reqObj)
+    return fetch("/users", reqObj)
       .then((resp) => resp.json())
       .then((data) => {
         if (data.error) {
@@ -141,7 +136,7 @@ export function updateUser(user) {
 export function updateCurrentUser(user, formData, history) {
   return (dispatch) => {
     const token = localStorage.token
-    const fetchUpdateUserUrl = fetchUsersUrl + "/" + user.id
+    const fetchUpdateUserUrl = "/users/" + user.id
     // TODO Have update user update the image on AWS
     const reqUpdObj = {
       method: "PATCH",
@@ -180,7 +175,7 @@ export function setAllUsers(allUsers) {
 
 export function fetchAllUsers() {
   return (dispatch) => {
-    return fetch(fetchUsersUrl)
+    return fetch("/users")
       .then((resp) => resp.json())
       .then((data) => {
         // console.log(data)
@@ -204,7 +199,7 @@ export function setAllSongs(allSongs) {
 
 export function fetchAllSongs() {
   return (dispatch) => {
-    return fetch(fetchSongsUrl)
+    return fetch("/songs")
       .then((resp) => resp.json())
       .then((data) => {
         if (data.error) {
@@ -244,7 +239,7 @@ export function postNewSong(formData, user_id, history) {
       },
       body: songData,
     }
-    return fetch(fetchSongsUrl, reqObjPostSong)
+    return fetch("/songs", reqObjPostSong)
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
@@ -270,7 +265,7 @@ export function setDisplayUser(displayUser) {
 export function findDisplayUser(allUsers, history) {
   return (dispatch) => {
     const displayUserID = Number(history.location.pathname.slice(9))
-    fetch(fetchUsersUrl + "/" + displayUserID)
+    fetch("/users/" + displayUserID)
       .then((res) => res.json())
       .then((data) => {
         console.log(data)
@@ -303,7 +298,7 @@ export function setDisplaySong(displaySong) {
 export function findDisplaySong(history) {
   return (dispatch) => {
     const displaySongID = Number(history.location.pathname.slice(7))
-    fetch(fetchSongsUrl + "/" + displaySongID)
+    fetch("/songs/" + displaySongID)
       .then((res) => res.json())
       .then((song) => {
         console.log(song)
@@ -355,7 +350,7 @@ export function findDisplayComments(songId) {
     // const displayComments = allComments.filter((comment) => {
     //   return comment.song_id === displaySong.song.id
     // })
-    fetch(fetchSongsUrl + "/" + songId)
+    fetch("/songs/" + songId)
       .then((res) => res.json())
       .then((song) => {
         console.log(song)
@@ -392,7 +387,7 @@ export function postNewComment(content, user_id, song_id) {
         song_id,
       }),
     }
-    return fetch(fetchCommentsUrl, reqObj)
+    return fetch("/comments", reqObj)
       .then((resp) => resp.json())
       .then((data) => {
         if (data.error) {
@@ -421,7 +416,7 @@ export function deleteCommentFromBackend(comment_id) {
     }
     let result = confirm("Do you want to delete this comment?")
     if (result) {
-      return fetch(`${fetchCommentsUrl}/${comment_id}`, reqDelObj)
+      return fetch("/comments/" + comment_id, reqDelObj)
         .then((res) => res.json())
         .then((data) => {
           console.log(data)
@@ -448,7 +443,7 @@ export function setAllTags(allTags) {
 // ! GET all Tags
 export function fetchAllTags() {
   return (dispatch) => {
-    return fetch(fetchTagsUrl)
+    return fetch("/tags")
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
@@ -550,7 +545,7 @@ export function followUser(followed, follower_id) {
         followed_id: followed.id,
       }),
     }
-    return fetch(fetchFollowingsUrl, reqPostObj)
+    return fetch("/follwings", reqPostObj)
       .then((res) => res.json())
       .then((data) => {
         console.log(data)
@@ -577,7 +572,7 @@ export function unfollowUser(relationship_id, displayUser) {
       `Are you sure you want to unfollow ${displayUser.username}?`
     )
     if (result) {
-      return fetch(`${fetchFollowingsUrl}/${relationship_id}`, reqDelObj)
+      return fetch("/follwings/" + relationship_id, reqDelObj)
         .then((res) => res.json())
         .then((data) => {
           if (!data.error) {
@@ -631,7 +626,7 @@ export function deleteSong(song_id, history) {
     }
     let result = confirm("Do you want to delete this song?")
     if (result) {
-      return fetch(`${fetchSongsUrl}/${song_id}`, reqDelObj)
+      return fetch("/songs/" + song_id, reqDelObj)
         .then((res) => res.json())
         .then((data) => {
           console.log(data)
@@ -665,7 +660,7 @@ export function deleteUser(user_id, history) {
     }
     let result = confirm("Are you sure you want to delete your account??")
     if (result) {
-      return fetch(`${fetchUsersUrl}/${user_id}`, reqDelObj)
+      return fetch("/users/" + user_id, reqDelObj)
         .then((res) => res.json())
         .then((data) => {
           console.log(data)
