@@ -30,7 +30,7 @@ class SongShowPage extends Component {
     const { song, song_link } = this.props.displaySong
     const isLoaded = !!this.props.displaySong.song
     const mappedTags = isLoaded
-      ? song.tags.map((tag) => <span> #{tag.name} </span>)
+      ? song.tags.map((tag) => <span key={tag.id}> #{tag.name} </span>)
       : null
     const { isLoggedIn } = this.props.user
 

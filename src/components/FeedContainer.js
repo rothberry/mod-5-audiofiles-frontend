@@ -54,6 +54,7 @@ class FeedContainer extends Component {
       })
     })
     const mappedFeed = filteredSongsByTag.map((songData) => {
+      console.log(songData)
       return (
         <div className={`waveform-${songData.id}`} key={songData.id}>
           <SongFeedComponent

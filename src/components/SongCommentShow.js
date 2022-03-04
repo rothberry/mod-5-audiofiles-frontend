@@ -33,7 +33,7 @@ class SongCommentShow extends Component {
         (u) => u.id === comment.user_id
       )
       return (
-        <Segment as='ol' size='tiny'>
+        <Segment as='ol' size='tiny' key={comment.user_id}>
           {isCurrentUser ? (
             <Button
               icon='delete'
