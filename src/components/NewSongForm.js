@@ -2,154 +2,165 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import {
-  Button,
-  Form,
-  Grid,
-  Header,
-  Segment,
-  Dimmer,
-  Loader,
-  Image,
+	Button,
+	Form,
+	Grid,
+	Header,
+	Segment,
+	Dimmer,
+	Loader,
+	Image,
 } from "semantic-ui-react"
 import { Link, withRouter } from "react-router-dom"
 import { postNewSong } from "../actions"
 
 class NewSongForm extends Component {
-  state = {
-    title: "",
-    genre: "",
-    description: "",
-    song_link: "",
-    selectedTags: [],
-    isLoading: false,
-  }
+	state = {
+		title: "",
+		genre: "",
+		description: "",
+		song_link: "",
+		selectedTags: [],
+		isLoading: false,
+		tagOptions: [],
+	}
 
-  handleNewSongSubmit = (e) => {
-    e.preventDefault()
-    const { title, genre, description, song_link } = this.state
-    const isRealSong = !!title && !!genre && !!description && !!song_link
-    if (isRealSong) {
-      this.setState({ isLoading: true })
-      const user_id = this.props.user.id
-      this.props.postNewSong(this.state, user_id, this.props.history)
-      // this.setState({ isLoading: false })
-    } else {
-      alert("Cannot submit song with blank entries")
-    }
-  }
+	handleNewSongSubmit = (e) => {
+		e.preventDefault()
+		const { title, genre, description, song_link } = this.state
+		const isRealSong = !!title && !!genre && !!description && !!song_link
+		if (isRealSong) {
+			this.setState({ isLoading: true })
+			const user_id = this.props.user.id
+			this.props.postNewSong(this.state, user_id, this.props.history)
+			// this.setState({ isLoading: false })
+		} else {
+			alert("Cannot submit song with blank entries")
+		}
+	}
 
-  handleNewSongChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value })
-  }
+	handleNewSongChange = (e) => {
+		this.setState({ [e.target.name]: e.target.value })
+	}
 
-  handleSelectedTags = (e, { value }) => {
-    this.setState({ selectedTags: value })
-  }
+	handleSelectedTags = (e, { value }) => {
+		this.setState({ selectedTags: value })
+	}
 
-  onFilesAdded = (e) => {
-    const targetSongLink = e.target.files[0]
-    const titleValue = targetSongLink.name.slice(0, -4)
-    this.setState({ song_link: targetSongLink, title: titleValue })
-  }
+	handleAddition = (e, { value }) => {
+		this.setState((prevState) => ({
+			selectedTags: [{ text: value, value }, ...prevState.options],
+		}))
+	}
+	onFilesAdded = (e) => {
+		const targetSongLink = e.target.files[0]
+		const titleValue = targetSongLink.name.slice(0, -4)
+		this.setState({ song_link: targetSongLink, title: titleValue })
+	}
 
-  tagOptions = (allTags) => {
-    return allTags.map((tag) => {
-      return {
-        key: tag.name,
-        text: tag.name.split("_").join(" "),
-        value: tag.name,
-      }
-    })
-  }
+	tagOptions = (allTags) => {
+		const createTagOptions = allTags.map((tag) => {
+			return {
+				key: tag.name,
+				text: tag.name.split("_").join(" "),
+				value: tag.name,
+			}
+		})
+		this.setState({ tagOptions: createTagOptions })
+	}
 
-  goBackToProfile = () => {
-    this.props.history(`/profile/${this.props.user.id}`)
-  }
+	goBackToProfile = () => {
+		this.props.history(`/profile/${this.props.user.id}`)
+	}
 
-  render() {
-    // TODO Add loader for long uploads
-    const tagOptions = this.tagOptions(this.props.allTags)
-    // console.log(this.state)
-    const songFormStyle = { margin: "10% 20%" }
-    if (!this.state.isLoading) {
-      return (
-        <div className='new-song-form'>
-          <Grid textAlign='center' verticalAlign='middle' style={songFormStyle}>
-            <Grid.Column>
-              <Form
-                size='large'
-                onSubmit={this.handleNewSongSubmit}
-                encType='multipart/form-data'
-              >
-                <Segment stacked>
-                  <Header as='h1'>Submit a new Track!</Header>
-                  <Header as='h4'>Please fill out entire form.</Header>
-                  <Form.Input
-                    onChange={this.handleNewSongChange}
-                    placeholder='Title'
-                    // label='Title'
-                    value={this.state.title}
-                    type='text'
-                    name='title'
-                  />
-                  <Form.Input
-                    onChange={this.handleNewSongChange}
-                    placeholder='Genre'
-                    // label="Genre"
-                    type='text'
-                    name='genre'
-                  />
-                  <Form.Input
-                    onChange={this.handleNewSongChange}
-                    placeholder='Description'
-                    // label="Description"
-                    type='text'
-                    name='description'
-                  />
-                  <Form.Dropdown
-                    onChange={this.handleSelectedTags}
-                    search
-                    selection
-                    multiple
-                    id='tag-dropdown'
-                    options={tagOptions}
-                    placeholder='Select Tags'
-                    name='selectedTags'
-                  />
-                  {/* TODO CORRECT AWS STUFF */}
-                  <input
-                    type='file'
-                    accept='audio/*'
-                    onChange={this.onFilesAdded}
-                  />
-                  <Button type='submit' primary fluid size='large'>
-                    Submit New Song
-                  </Button>
-                </Segment>
-              </Form>
-            </Grid.Column>
-          </Grid>
-        </div>
-      )
-    } else {
-      return (
-        <>
-          <Dimmer active>
-            <Loader size='big'>Preparing Files</Loader>
-          </Dimmer>
-        </>
-      )
-    }
-  }
+	render() {
+		// const tagOptions = this.tagOptions(this.props.allTags)
+		const { selectedTags, tagOptions } = this.state
+		console.log({ selectedTags })
+		console.log({ tagOptions })
+		const songFormStyle = { margin: "10% 20%" }
+		if (!this.state.isLoading) {
+			return (
+				<div className="new-song-form">
+					<Grid textAlign="center" verticalAlign="middle" style={songFormStyle}>
+						<Grid.Column>
+							<Form
+								size="large"
+								onSubmit={this.handleNewSongSubmit}
+								encType="multipart/form-data"
+							>
+								<Segment stacked>
+									<Header as="h1">Submit a new Track!</Header>
+									<Header as="h4">Please fill out entire form.</Header>
+									<Form.Input
+										onChange={this.handleNewSongChange}
+										placeholder="Title"
+										// label='Title'
+										value={this.state.title}
+										type="text"
+										name="title"
+									/>
+									<Form.Input
+										onChange={this.handleNewSongChange}
+										placeholder="Genre"
+										// label="Genre"
+										type="text"
+										name="genre"
+									/>
+									<Form.Input
+										onChange={this.handleNewSongChange}
+										placeholder="Description"
+										// label="Description"
+										type="text"
+										name="description"
+									/>
+									<Form.Dropdown
+										onChange={this.handleSelectedTags}
+										search
+										selection
+										multiple
+										allowAdditions
+										id="tag-dropdown"
+										options={tagOptions}
+										placeholder="Select Tags"
+										name="selectedTags"
+										onAddItem={this.handleAddtion}
+										value={this.state.selectedTags}
+									/>
+									{/* TODO CORRECT AWS STUFF */}
+									<input
+										type="file"
+										accept="audio/*"
+										onChange={this.onFilesAdded}
+									/>
+									<Button type="submit" primary fluid size="large">
+										Submit New Song
+									</Button>
+								</Segment>
+							</Form>
+						</Grid.Column>
+					</Grid>
+				</div>
+			)
+		} else {
+			return (
+				<>
+					<Dimmer active>
+						<Loader size="big">Preparing Files</Loader>
+					</Dimmer>
+				</>
+			)
+		}
+	}
 }
 
 const mapStateToProps = (state) => {
-  return {
-    user: state.user,
-    allTags: state.allTags,
-  }
+	return {
+		user: state.user,
+		allTags: state.allTags,
+	}
 }
 
 export default connect(mapStateToProps, { postNewSong })(
-  withRouter(NewSongForm)
+	withRouter(NewSongForm)
 )
