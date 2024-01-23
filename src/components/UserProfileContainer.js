@@ -13,9 +13,9 @@ import {
   setCurrentUser,
   deleteUser,
   createFollowersArray,
-  createFollowedsArray
+  createFollowedsArray,
 } from "../actions"
-import _ from 'lodash'
+import _ from "lodash"
 
 class UserProfileContainer extends Component {
   componentDidMount() {
@@ -36,7 +36,7 @@ class UserProfileContainer extends Component {
     )
     if (!!this.props.displayUser.passive_relationships) {
       const relationship = this.props.displayUser.passive_relationships.find(
-        rel => {
+        (rel) => {
           return rel.follower_id === this.props.user.id
         }
       )
@@ -53,11 +53,13 @@ class UserProfileContainer extends Component {
   render() {
     const { isCurrentUser } = this.props.user
     const { username, name, location, bio, id } = this.props.displayUser
-    const filteredDisplayUserSongs = this.props.allSongs.filter(displaySong => {
-      return displaySong.song.user_id === id
-    })
+    const filteredDisplayUserSongs = this.props.allSongs.filter(
+      (displaySong) => {
+        return displaySong.song.user_id === id
+      }
+    )
     const mappedDisplayUserSongFeed = filteredDisplayUserSongs.map(
-      displaySong => {
+      (displaySong) => {
         return (
           <SongFeedComponent songData={displaySong} userClickDisabled={true} />
         )
@@ -68,7 +70,7 @@ class UserProfileContainer extends Component {
 
     return !!this.props.displayUser.id ? (
       <Grid className={`user-profile-${id}`} columns={3} style={profileStyle}>
-        <Grid.Column width="10">
+        <Grid.Column width='10'>
           {hasSongs ? (
             _.reverse(mappedDisplayUserSongFeed)
           ) : (
@@ -85,30 +87,27 @@ class UserProfileContainer extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     user: state.user,
     displayUser: state.displayUser,
     allSongs: state.allSongs,
     allUsers: state.allUsers,
     followeds: state.followeds,
-    followers: state.followers
+    followers: state.followers,
   }
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    findDisplayUser,
-    followUser,
-    currentUser,
-    currentRelationship,
-    setCurrentUser,
-    deleteUser,
-    createFollowersArray,
-    createFollowedsArray
-  }
-)(withRouter(UserProfileContainer))
+export default connect(mapStateToProps, {
+  findDisplayUser,
+  followUser,
+  currentUser,
+  currentRelationship,
+  setCurrentUser,
+  deleteUser,
+  createFollowersArray,
+  createFollowedsArray,
+})(withRouter(UserProfileContainer))
 
 {
   /* <Modal trigger={<Button content="Delete" />}>

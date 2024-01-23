@@ -5,27 +5,13 @@ import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
 import {
   findDisplayComments,
-  fetchAllComments,
   deleteCommentFromBackend,
-  goToUserProfile
+  goToUserProfile,
 } from "../actions"
 import _ from "lodash"
 
 class SongCommentShow extends Component {
-  componentDidMount() {
-    // TODO This works, but it's inefficent
-    this.commentGrabber()
-  }
-
-  // commentGrabber = async () => {
-  commentGrabber = () => {
-    this.props.findDisplayComments(
-      this.props.allComments,
-      this.props.displaySong
-    )
-  }
-
-  showTime = ts => {
+  showTime = (ts) => {
     const date = ts.getDate()
     const month = ts.getMonth()
     const year = ts.getYear()
@@ -39,38 +25,48 @@ class SongCommentShow extends Component {
 
   mappedComments = () => {
     const commentStyle = { backgroundColor: "#0C0536", color: "#C0BDCA" }
-    return this.props.displayComments.map(comment => {
+    return this.props.displayComments.map((comment) => {
       let ts = new Date(comment.created_at)
-      const isCurrentUser = this.props.user.id === comment.user.id
+      const isCurrentUser = this.props.user.id === comment.user_id
+      // TODO Maybe move to backend (add username to songs#show response?)
+      const commentUser = this.props.allUsers.find(
+        (u) => u.id === comment.user_id
+      )
       return (
-        <Segment as="ol" size="tiny">
+        <Segment as='ol' size='tiny'>
           {isCurrentUser ? (
             <Button
-              icon="delete"
-              size="mini"
-              onClick={comment_id =>
-                this.props.deleteCommentFromBackend(comment.id)
-              }
+              icon='delete'
+              size='mini'
+              onClick={() => this.props.deleteCommentFromBackend(comment.id)}
             />
           ) : (
             <Button
-              icon="user"
-              size="mini"
-              onClick={(user_id, history) =>
-                this.props.goToUserProfile(comment.user.id, this.props.history)
+              icon='user'
+              size='mini'
+              onClick={() =>
+                this.props.goToUserProfile(comment.user_id, this.props.history)
               }
             />
           )}
           <span
-            style={{ fontStyle: "italic", cursor: "pointer", paddingRight: "1%" }}
-            onClick={(user_id, history) =>
-              this.props.goToUserProfile(comment.user.id, this.props.history)
+            style={{
+              fontStyle: "italic",
+              cursor: "pointer",
+              paddingRight: "1%",
+            }}
+            onClick={() =>
+              this.props.goToUserProfile(comment.user_id, this.props.history)
             }
           >
-            {comment.user.username}:{" "}
+            {commentUser.username}:{" "}
           </span>
-          <span style={{fontWeight: 'bold', paddingRight: '1%'}}>{comment.content} </span>
-          <span style={{ fontStyle: "italic", float: 'right' }}>{this.showTime(ts)}</span>
+          <span style={{ fontWeight: "bold", paddingRight: "1%" }}>
+            {comment.content}{" "}
+          </span>
+          <span style={{ fontStyle: "italic", float: "right" }}>
+            {this.showTime(ts)}
+          </span>
         </Segment>
       )
     })
@@ -80,34 +76,29 @@ class SongCommentShow extends Component {
     const commentStyleBox = {
       overflow: "auto",
       maxHeight: "30vh",
-      margin: "0% 1%"
+      margin: "0% 1%",
     }
     // console.log(this.props.allComments)
     return (
       <Segment.Group raised style={commentStyleBox}>
-        {this.props.allComments.length > 0
+        {this.props.displayComments.length > 0
           ? _.reverse(this.mappedComments())
-          : "loading..."}
+          : "Nupe"}
       </Segment.Group>
     )
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     user: state.user,
-    allComments: state.allComments,
-    displaySong: state.displaySong,
-    displayComments: state.displayComments
+    allUsers: state.allUsers,
+    displayComments: state.displayComments,
   }
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    findDisplayComments,
-    fetchAllComments,
-    deleteCommentFromBackend,
-    goToUserProfile
-  }
-)(withRouter(SongCommentShow))
+export default connect(mapStateToProps, {
+  findDisplayComments,
+  deleteCommentFromBackend,
+  goToUserProfile,
+})(withRouter(SongCommentShow))

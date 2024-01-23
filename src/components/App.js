@@ -16,10 +16,9 @@ import {
   logoutUser,
   fetchAllUsers,
   fetchAllSongs,
-  fetchAllComments,
   fetchAllTags,
   createFollowersArray,
-  createFollowedsArray
+  createFollowedsArray,
 } from "../actions"
 
 class App extends React.Component {
@@ -29,10 +28,9 @@ class App extends React.Component {
 
   asyncFetches = async () => {
     await this.props.currentUser()
-    await this.props.fetchAllUsers()
-    await this.props.fetchAllSongs()
-    await this.props.fetchAllComments()
-    this.props.fetchAllTags()
+    // await this.props.fetchAllUsers()
+    // await this.props.fetchAllSongs()
+    // this.props.fetchAllTags()
     // const { allUsers, user } = this.props
     // this.props.createFollowersArray(allUsers, user)
     // this.props.createFollowedsArray(allUsers, user)
@@ -41,46 +39,42 @@ class App extends React.Component {
   render() {
     const { isLoggedIn } = this.props.user
     return (
-      <div className="app-container">
+      <div className='app-container'>
         <Nav />
         <br /> <br />
-        <Route exact path="/" component={FeedContainer} />
+        <Route exact path='/' component={FeedContainer} />
         <Switch>
-          <Route exact path="/login">
-            {!!isLoggedIn ? <Redirect push to="/" /> : <LoginForm />}
+          <Route exact path='/login'>
+            {!!isLoggedIn ? <Redirect push to='/' /> : <LoginForm />}
           </Route>
-          <Route exact path="/createaccount">
-            {!!isLoggedIn ? <Redirect push to="/" /> : <NewUserForm />}
+          <Route exact path='/createaccount'>
+            {!!isLoggedIn ? <Redirect push to='/' /> : <NewUserForm />}
           </Route>
-          <Route path="/profile/:id" component={UserProfileContainer} />
-          <Route path="/songs/:id" component={SongShowPage} />
-          <Route exact path="/newsong">
-            {!!isLoggedIn ? <NewSongForm /> : <Redirect push to="/login" />}
+          <Route path='/profile/:id' component={UserProfileContainer} />
+          <Route path='/songs/:id' component={SongShowPage} />
+          <Route exact path='/newsong'>
+            {!!isLoggedIn ? <NewSongForm /> : <Redirect push to='/login' />}
           </Route>
         </Switch>
-        <Route path="/editaccount" render={() => <EditUserForm />} />
+        <Route path='/editaccount' render={() => <EditUserForm />} />
       </div>
     )
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     user: state.user,
-    allUsers: state.allUsers
+    // allUsers: state.allUsers
   }
 }
 
-export default connect(
-  mapStateToProps,
-  {
-    currentUser,
-    logoutUser,
-    fetchAllUsers,
-    fetchAllSongs,
-    fetchAllComments,
-    fetchAllTags,
-    createFollowersArray,
-    createFollowedsArray
-  }
-)(withRouter(App))
+export default connect(mapStateToProps, {
+  currentUser,
+  logoutUser,
+  fetchAllUsers,
+  fetchAllSongs,
+  fetchAllTags,
+  createFollowersArray,
+  createFollowedsArray,
+})(withRouter(App))

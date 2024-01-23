@@ -9,20 +9,19 @@ class EditUserForm extends Component {
   state = {
     username: "",
     name: "",
-    // password: "",
     location: "",
     bio: "",
     img_url: "",
     facebook_url: "",
     twitter_url: "",
-    soundcloud_url: ""
+    soundcloud_url: "",
   }
 
   componentDidMount() {
     this.setState(this.props.user)
   }
 
-  handleUpdateUser = e => {
+  handleUpdateUser = (e) => {
     e.preventDefault()
     this.props.updateCurrentUser(
       this.props.user,
@@ -30,6 +29,7 @@ class EditUserForm extends Component {
       this.props.history
     )
   }
+  // TODO check use of this lifecycle method
   componentDidUpdate(prevProps) {
     // Typical usage (don't forget to compare props):
     if (this.props.user.id !== prevProps.user.id) {
@@ -37,7 +37,7 @@ class EditUserForm extends Component {
     }
   }
 
-  handleEditUserChange = e => {
+  handleEditUserChange = (e) => {
     const targetValue = e.target.value
     const targetName = e.target.name
     this.setState({ [targetName]: targetValue })
@@ -51,15 +51,16 @@ class EditUserForm extends Component {
     const {
       username,
       name,
-      // password,
       location,
       bio,
       img_url,
       facebook_url,
       soundcloud_url,
-      twitter_url
+      twitter_url,
     } = this.props.user
     const editUserStyle = { margin: "5% 30%" }
+    // TODO Abstract repeated Form.Inputs
+
     return (
       <div className='edit-user-container'>
         <Segment size='medium' style={editUserStyle}>
@@ -82,13 +83,6 @@ class EditUserForm extends Component {
                 type='text'
                 name='username'
               />
-              {/* <Form.Input
-              onChange={this.handleEditUserChange}
-              defaultValue={password}
-              placeholder="Password"
-              type="password"
-              name="password"
-            /> */}
               <Form.Input
                 onChange={this.handleEditUserChange}
                 label='Location: '
@@ -107,6 +101,14 @@ class EditUserForm extends Component {
               />
             </Form.Field>
             <Form.Field>
+              {/* TODO ADD AWS UPLOAD FEATURE */}
+              {/* <Label>Upload your image</Label>
+              <input
+                type='file'
+                accept='image/*'
+                onChange={this.onImageAdded}
+              /> */}
+
               <Form.Input
                 onChange={this.handleEditUserChange}
                 placeholder='Image Url'
@@ -150,9 +152,9 @@ class EditUserForm extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user,
   }
 }
 
