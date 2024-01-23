@@ -12,7 +12,7 @@ import {
   deleteUser
 } from "../actions"
 const defImg =
-  "https://thespinoff.co.nz/wp-content/uploads/2019/09/Goose-game-header-850x510.jpg"
+  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
 
 class UserProfileSide extends Component {
   // handleFollowUser = (followed_id, follower_id) => {
@@ -92,7 +92,7 @@ class UserProfileSide extends Component {
     // let isFolloweds = !!mappedFolloweds
 
     // const eachButtonStyle = { }
-    const eachButtonStyle = { width: "40%", margin: "0 1%" }
+    const eachButtonStyle = { width: "20%", margin: "0 1%" }
     const imgStyle = { height: 300, width: 300 }
     // console.log('displayuser: ', this.displayUser)
     // console.log(this.props.user)
@@ -118,7 +118,7 @@ class UserProfileSide extends Component {
               disabled={isFace}
               style={eachButtonStyle}
             >
-              <Icon name='facebook' /> Facebook
+              <Icon name='facebook' />
             </Button>
             <Button
               style={eachButtonStyle}
@@ -127,7 +127,7 @@ class UserProfileSide extends Component {
               href={twitter_url}
               disabled={isTwit}
             >
-              <Icon name='twitter' /> Twitter
+              <Icon name='twitter' />
             </Button>
             <Button
               color='orange'
@@ -136,7 +136,7 @@ class UserProfileSide extends Component {
               href={soundcloud_url}
               disabled={isSound}
             >
-              <Icon name='soundcloud' /> Soundcloud
+              <Icon name='soundcloud' />
             </Button>
           </Button.Group>
         </Segment>

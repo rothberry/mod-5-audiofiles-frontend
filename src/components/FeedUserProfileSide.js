@@ -19,7 +19,7 @@ import {
   setCurrentUser,
   deleteUser
 } from "../actions"
-const defImg = "https://thespinoff.co.nz/wp-content/uploads/2019/09/Goose-game-header-850x510.jpg"
+const defImg = "https://plus.unsplash.com/premium_photo-1682125819437-82a7212ee928?q=80&w=2106&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 
 class FeedUserProfileSide extends Component {
   // handleFollowUser = (followed_id, follower_id) => {
