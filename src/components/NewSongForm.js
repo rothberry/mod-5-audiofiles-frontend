@@ -75,9 +75,10 @@ class NewSongForm extends Component {
 
 	render() {
 		// const tagOptions = this.tagOptions(this.props.allTags)
-		const { selectedTags, tagOptions } = this.state
-		console.log({ selectedTags })
-		console.log({ tagOptions })
+		const { selectedTags, tagOptions, song_link } = this.state
+		console.log({ song_link })
+		// console.log({ selectedTags })
+		// console.log({ tagOptions })
 		const songFormStyle = { margin: "10% 20%" }
 		if (!this.state.isLoading) {
 			return (
