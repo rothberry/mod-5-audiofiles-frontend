@@ -119,42 +119,27 @@ class UserProfileSide extends Component {
               href={facebook_url}
               disabled={isFace}
               style={eachButtonStyle}
-<<<<<<< HEAD
             >
               <Icon name='facebook' />
             </Button>
-=======
-              icon='facebook'
-            />
->>>>>>> e2fa8c6c331884dfc57a8d2df9344a5e241b14b2
             <Button
               style={eachButtonStyle}
               color='twitter'
               as='a'
               href={twitter_url}
               disabled={isTwit}
-<<<<<<< HEAD
             >
               <Icon name='twitter' />
             </Button>
-=======
-              icon='twitter'
-            />
->>>>>>> e2fa8c6c331884dfc57a8d2df9344a5e241b14b2
             <Button
               color='orange'
               style={eachButtonStyle}
               as='a'
               href={soundcloud_url}
               disabled={isSound}
-<<<<<<< HEAD
             >
               <Icon name='soundcloud' />
             </Button>
-=======
-              icon='soundcloud'
-            />
->>>>>>> e2fa8c6c331884dfc57a8d2df9344a5e241b14b2
           </Button.Group>
         </Segment>
         <br />
